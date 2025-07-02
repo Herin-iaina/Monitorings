@@ -12,11 +12,10 @@ import csv
 import os
 import glob
 import json
+from dotenv import load_dotenv
 
 # Configuration SSH
 USE_SSH = True  # Mettre à False pour désactiver SSH
-SSH_USERNAME = "smartelia"  # Remplacer par votre nom d'utilisateur
-SSH_PASSWORD = "WeAr24DM!n"  # Remplacer par votre mot de passe
 
 # Configuration des applications macOS
 APPLICATIONS_TO_CHECK = [
@@ -65,6 +64,10 @@ macbook_pro_models = {
     "MacBookPro12,1": ("13 pouces", 2015),
     "MacBookPro14,2": ("13 pouces", 2017),
 }
+
+load_dotenv()
+SSH_USERNAME = os.getenv("SSH_USERNAME")
+SSH_PASSWORD = os.getenv("SSH_PASSWORD")
 
 def ping(ip):
     """Ping an IP address and return True if it responds"""
@@ -260,6 +263,7 @@ def scan_ip(ip, ssh_credentials=None):
             
             # Si SSH est activé, essayer la connexion SSH
             if USE_SSH and ssh_credentials:
+                # print(f"Trying to connect to {ssh_credentials['username']} with password {ssh_credentials['password']}")
                 ssh_result = try_ssh_connection(ip, ssh_credentials['username'], ssh_credentials['password'])
                 if isinstance(ssh_result, dict):
                     hostname = ssh_result.get('hostname', 'Unknown')
@@ -365,6 +369,8 @@ def main():
             'username': SSH_USERNAME,
             'password': SSH_PASSWORD
         }
+        # for user, password in ssh_credentials.items():
+        #     print(f"Trying to connect to {user} with password {password}")
 
     # Liste des IPs à scanner
     ips_to_scan = []

@@ -1,0 +1,2577 @@
+[
+    {
+        "ip": "172.17.18.37",
+        "mac": "a4:cf:99:7c:b4:b1",
+        "hostname": "MBP274-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "151Gi",
+        "ram_info": "15G used, 3896M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 56,
+            "power_plugged": true,
+            "time_left": "8:52",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 129,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "marcel_smartelia"
+    },
+    {
+        "ip": "172.17.18.29",
+        "mac": "6a:bd:69:11:76:55",
+        "hostname": "MBP346-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "297Gi",
+        "ram_info": "15G used, 7623M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 89,
+            "power_plugged": true,
+            "time_left": "3:03",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 159,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "denis_smartelia"
+    },
+    {
+        "ip": "172.17.18.119",
+        "mac": "10:9f:41:ba:e1:8a",
+        "hostname": "MBP317-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "285Gi",
+        "ram_info": "15G used, 5648M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 93,
+            "power_plugged": true,
+            "time_left": "10:57",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 156,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "dylan_smartelia"
+    },
+    {
+        "ip": "172.17.18.34",
+        "mac": "ca:b1:74:21:dd:90",
+        "hostname": "MBP266-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,10",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,10",
+        "taille": "16 pouces",
+        "annee": 2023,
+        "disk_free": "134Gi",
+        "ram_info": "14G used, 1387M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 48,
+            "power_plugged": true,
+            "time_left": "8:15",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 187,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "floris_smartelia"
+    },
+    {
+        "ip": "172.17.18.2",
+        "mac": "Unknown",
+        "hostname": "MBP276-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.4.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "8.0Gi",
+        "ram_info": "15G used, 5057M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 87,
+            "power_plugged": true,
+            "time_left": "8:42",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 161,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "sasha_smartelia"
+    },
+    {
+        "ip": "172.17.18.27",
+        "mac": "10:9f:41:c5:b8:2d",
+        "hostname": "MBP314-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "207Gi",
+        "ram_info": "15G used, 6868M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 70,
+            "power_plugged": true,
+            "time_left": "9:05",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 160,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "noah_smartelia"
+    },
+    {
+        "ip": "172.17.18.22",
+        "mac": "16:a5:bc:4a:f7:2f",
+        "hostname": "MBP191-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "145Gi",
+        "ram_info": "15G used, 1606M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 50,
+            "power_plugged": true,
+            "time_left": "4:27",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 478,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "christophe_smartelia"
+    },
+    {
+        "ip": "172.17.18.9",
+        "mac": "b0:be:83:5e:2d:35",
+        "hostname": "MBP217-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "13Gi",
+        "ram_info": "9045M used, 6777M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 84,
+            "power_plugged": true,
+            "time_left": null,
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 284,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "mia_smartelia"
+    },
+    {
+        "ip": "172.17.18.217",
+        "mac": "Unknown",
+        "hostname": "MBP224-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "124Gi",
+        "ram_info": "15G used, 8458M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 73,
+            "power_plugged": true,
+            "time_left": "5:42",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 348,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "jenna_smartelia"
+    },
+    {
+        "ip": "172.17.18.11",
+        "mac": "Unknown",
+        "hostname": "MBP294-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "81Gi",
+        "ram_info": "15G used, 1080M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 70,
+            "power_plugged": true,
+            "time_left": "3:32",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 222,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "larissa_smartelia"
+    },
+    {
+        "ip": "172.17.19.5",
+        "mac": "5c:e9:1e:6b:f7:15",
+        "hostname": "MBP240-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,6",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,6",
+        "taille": "16 pouces",
+        "annee": 2023,
+        "disk_free": "250Gi",
+        "ram_info": "18G used, 823M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 57,
+            "power_plugged": true,
+            "time_left": "1:01",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 362,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "nicolas_smartelia"
+    },
+    {
+        "ip": "172.17.18.216",
+        "mac": "Unknown",
+        "hostname": "MBP156-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "112Gi",
+        "ram_info": "15G used, 1977M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 79,
+            "power_plugged": true,
+            "time_left": "9:21",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 470,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "leilla_smartelia"
+    },
+    {
+        "ip": "172.17.18.3",
+        "mac": "a4:cf:99:7e:e7:1b",
+        "hostname": "MBP293-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "18Gi",
+        "ram_info": "15G used, 2642M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 90,
+            "power_plugged": true,
+            "time_left": "15:15",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 193,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "loic_smartelia"
+    },
+    {
+        "ip": "172.17.19.24",
+        "mac": "10:9f:41:b9:7f:e1",
+        "hostname": "MBP350-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "325Gi",
+        "ram_info": "15G used, 5656M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 72,
+            "power_plugged": true,
+            "time_left": "11:48",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 157,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "anthony_smartelia"
+    },
+    {
+        "ip": "172.17.19.33",
+        "mac": "a4:83:e7:b2:19:b5",
+        "hostname": "MBP130-SMARTELIA-2.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro15,2",
+        "macos_version": "13.6.6",
+        "model_identifier": "MacBookPro15,2",
+        "taille": "Unknown",
+        "annee": "Unknown",
+        "disk_free": "140Gi",
+        "ram_info": "8102M used, 2293M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 75,
+            "power_plugged": true,
+            "time_left": "1:21",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 1358,
+            "full_charge_capacity": 4014,
+            "condition": "Normal"
+        },
+        "current_user": "stagiaire_vyperf"
+    },
+    {
+        "ip": "172.17.19.6",
+        "mac": "a4:cf:99:82:68:87",
+        "hostname": "MBP272-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "119Gi",
+        "ram_info": "15G used, 1794M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 65,
+            "power_plugged": true,
+            "time_left": "6:06",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 268,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "gabriel_smartelia"
+    },
+    {
+        "ip": "172.17.18.239",
+        "mac": "74:8f:3c:c3:c4:ae",
+        "hostname": "MBP141-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "117Gi",
+        "ram_info": "15G used, 264M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 64,
+            "power_plugged": true,
+            "time_left": "5:32",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 727,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "fabienne_smartelia"
+    },
+    {
+        "ip": "172.17.18.240",
+        "mac": "Unknown",
+        "hostname": "MBP247-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.4.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "11Gi",
+        "ram_info": "15G used, 6186M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 49,
+            "power_plugged": true,
+            "time_left": "4:12",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 269,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "barthelemy_smartelia"
+    },
+    {
+        "ip": "172.17.18.238",
+        "mac": "a4:cf:99:72:1f:48",
+        "hostname": "MBP259-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "15Gi",
+        "ram_info": "15G used, 7922M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 96,
+            "power_plugged": true,
+            "time_left": "8:39",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 319,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "thiago_smartelia"
+    },
+    {
+        "ip": "172.17.18.229",
+        "mac": "2a:9f:ea:a0:ab:6a",
+        "hostname": "MBP301-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "75Gi",
+        "ram_info": "15G used, 1459M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 93,
+            "power_plugged": true,
+            "time_left": "13:39",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 159,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "virginie_smartelia"
+    },
+    {
+        "ip": "172.17.18.26",
+        "mac": "16:bc:5f:56:c2:26",
+        "hostname": "MBP300-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "145Gi",
+        "ram_info": "15G used, 8053M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 63,
+            "power_plugged": true,
+            "time_left": "1:55",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 140,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "ismael_smartelia"
+    },
+    {
+        "ip": "172.17.18.15",
+        "mac": "be:68:be:71:e8:4c",
+        "hostname": "MBP184-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "88Gi",
+        "ram_info": "15G used, 44M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 79,
+            "power_plugged": true,
+            "time_left": "8:13",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 315,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "nolan_smartelia"
+    },
+    {
+        "ip": "172.17.18.219",
+        "mac": "74:8f:3c:c3:f8:8c",
+        "hostname": "MBP144-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.5",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "108Gi",
+        "ram_info": "13G used, 636M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 44,
+            "power_plugged": true,
+            "time_left": "4:58",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 751,
+            "full_charge_capacity": null,
+            "condition": "Service Recommended"
+        },
+        "current_user": "judith_b2p"
+    },
+    {
+        "ip": "172.17.18.237",
+        "mac": "10:9f:41:c3:bd:af",
+        "hostname": "MBP306-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "300Gi",
+        "ram_info": "15G used, 3482M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 95,
+            "power_plugged": true,
+            "time_left": "20:00",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 122,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "christiane_smartelia"
+    },
+    {
+        "ip": "172.17.19.29",
+        "mac": "5c:e9:1e:6d:47:36",
+        "hostname": "MBP241-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,6",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,6",
+        "taille": "16 pouces",
+        "annee": 2023,
+        "disk_free": "436Gi",
+        "ram_info": "30G used, 6079M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 31,
+            "power_plugged": true,
+            "time_left": "2:16",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 322,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "camille_smartelia"
+    },
+    {
+        "ip": "172.17.18.211",
+        "mac": "a4:cf:99:88:5c:7b",
+        "hostname": "MBP303-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "17Gi",
+        "ram_info": "15G used, 5065M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 97,
+            "power_plugged": true,
+            "time_left": "0:27",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 311,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "abby_smartelia"
+    },
+    {
+        "ip": "172.17.19.25",
+        "mac": "a4:cf:99:83:98:53",
+        "hostname": "MBP289-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "2.8Gi",
+        "ram_info": "15G used, 6714M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 98,
+            "power_plugged": true,
+            "time_left": "0:17",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 131,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "jenny_smartelia"
+    },
+    {
+        "ip": "172.17.18.1",
+        "mac": "b0:be:83:5c:28:6f",
+        "hostname": "MBP212-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "176Gi",
+        "ram_info": "14G used, 568M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 61,
+            "power_plugged": true,
+            "time_left": "6:23",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 438,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Enzo_Smartelia"
+    },
+    {
+        "ip": "172.17.18.23",
+        "mac": "a0:78:17:83:67:3e",
+        "hostname": "MBP153-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "163Gi",
+        "ram_info": "15G used, 493M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 89,
+            "power_plugged": true,
+            "time_left": "0:50",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 658,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Alan_smartelia"
+    },
+    {
+        "ip": "172.17.18.38",
+        "mac": "Unknown",
+        "hostname": "MBP297-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "115Gi",
+        "ram_info": "13G used, 392M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 77,
+            "power_plugged": true,
+            "time_left": "1:17",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 156,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Martine_Smartelia"
+    },
+    {
+        "ip": "172.17.18.230",
+        "mac": "5c:e9:1e:6c:62:98",
+        "hostname": "MBP239-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,6",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,6",
+        "taille": "16 pouces",
+        "annee": 2023,
+        "disk_free": "487Gi",
+        "ram_info": "31G used, 9630M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 44,
+            "power_plugged": true,
+            "time_left": "3:46",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 333,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "mathieu_smartelia"
+    },
+    {
+        "ip": "172.17.19.10",
+        "mac": "b0:be:83:63:dd:38",
+        "hostname": "MBP214-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "145Gi",
+        "ram_info": "15G used, 4651M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 67,
+            "power_plugged": true,
+            "time_left": "5:33",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 414,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "anissa_smartelia"
+    },
+    {
+        "ip": "172.17.18.10",
+        "mac": "10:9f:41:ba:ed:be",
+        "hostname": "MBP338-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "285Gi",
+        "ram_info": "15G used, 2421M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 62,
+            "power_plugged": true,
+            "time_left": "4:31",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 119,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "manou_smartelia"
+    },
+    {
+        "ip": "172.17.19.15",
+        "mac": "Unknown",
+        "hostname": "MBP152-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "143Gi",
+        "ram_info": "15G used, 3853M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 22,
+            "power_plugged": true,
+            "time_left": null,
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 653,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "gabriella_smartelia"
+    },
+    {
+        "ip": "172.17.18.227",
+        "mac": "a4:cf:99:71:fb:4a",
+        "hostname": "MBP248-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "151Gi",
+        "ram_info": "15G used, 5486M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 98,
+            "power_plugged": true,
+            "time_left": "20:00",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 249,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "lucien_pads"
+    },
+    {
+        "ip": "172.17.18.244",
+        "mac": "b0:be:83:58:f6:50",
+        "hostname": "MBP186-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "144Gi",
+        "ram_info": "15G used, 172M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 50,
+            "power_plugged": true,
+            "time_left": "1:44",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 436,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "ursulla_smartelia"
+    },
+    {
+        "ip": "172.17.19.59",
+        "mac": "88:e9:fe:75:41:1f",
+        "hostname": "MBP112-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro14,2",
+        "macos_version": "13.6.6",
+        "model_identifier": "MacBookPro14,2",
+        "taille": "13 pouces",
+        "annee": 2017,
+        "disk_free": "855Gi",
+        "ram_info": "15G used, 919M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 37,
+            "power_plugged": true,
+            "time_left": "1:02",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 1155,
+            "full_charge_capacity": 3512,
+            "condition": "Normal"
+        },
+        "current_user": "derrick_smartelia"
+    },
+    {
+        "ip": "172.17.18.247",
+        "mac": "a4:cf:99:7f:61:8b",
+        "hostname": "MBP286-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "14Gi",
+        "ram_info": "15G used, 7054M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 96,
+            "power_plugged": true,
+            "time_left": "10:03",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 178,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "sylvanna_smartelia"
+    },
+    {
+        "ip": "172.17.18.221",
+        "mac": "74:8f:3c:c1:86:2b",
+        "hostname": "MBP149-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "171Gi",
+        "ram_info": "14G used, 1812M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 59,
+            "power_plugged": true,
+            "time_left": "6:26",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 634,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "morgane_pads"
+    },
+    {
+        "ip": "172.17.18.242",
+        "mac": "10:9f:41:c4:d5:29",
+        "hostname": "MBP339-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "291Gi",
+        "ram_info": "15G used, 5431M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 95,
+            "power_plugged": true,
+            "time_left": "0:26",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 230,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "joris_smartelia"
+    },
+    {
+        "ip": "172.17.19.28",
+        "mac": "10:9f:41:c0:c8:45",
+        "hostname": "MBP313-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "347Gi",
+        "ram_info": "15G used, 1438M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 46,
+            "power_plugged": true,
+            "time_left": "5:29",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 39,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "celestin_smartelia"
+    },
+    {
+        "ip": "172.17.18.235",
+        "mac": "b0:be:83:5a:6f:e1",
+        "hostname": "MBP183-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "120Gi",
+        "ram_info": "15G used, 8396M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "0:00",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 436,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "lucie_smartelia"
+    },
+    {
+        "ip": "172.17.19.72",
+        "mac": "10:9f:41:bc:62:21",
+        "hostname": "MBP312-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "325Gi",
+        "ram_info": "15G used, 7673M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 54,
+            "power_plugged": true,
+            "time_left": "7:45",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 42,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "samuel_smartelia"
+    },
+    {
+        "ip": "172.17.19.69",
+        "mac": "Unknown",
+        "hostname": "MBP349-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "232Gi",
+        "ram_info": "15G used, 507M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 59,
+            "power_plugged": true,
+            "time_left": "7:16",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 137,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "tommy_smartelia"
+    },
+    {
+        "ip": "172.17.19.32",
+        "mac": "a0:78:17:7d:be:83",
+        "hostname": "MBP179-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "115Gi",
+        "ram_info": "15G used, 345M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 80,
+            "power_plugged": true,
+            "time_left": "11:02",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 345,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "logan_smartelia"
+    },
+    {
+        "ip": "172.17.19.21",
+        "mac": "b0:be:83:58:f4:24",
+        "hostname": "MBP196-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "3.6Gi",
+        "ram_info": "15G used, 6647M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "0:00",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 498,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "juliette_smartelia"
+    },
+    {
+        "ip": "172.17.19.18",
+        "mac": "74:8f:3c:bc:8c:e0",
+        "hostname": "MBP139-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "144Gi",
+        "ram_info": "15G used, 4242M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "7:29",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 776,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "dimitri_smartelia"
+    },
+    {
+        "ip": "172.17.19.13",
+        "mac": "4e:dc:87:70:eb:28",
+        "hostname": "MBP205-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "136Gi",
+        "ram_info": "15G used, 5012M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 74,
+            "power_plugged": true,
+            "time_left": "1:27",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 396,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "jade_smartelia"
+    },
+    {
+        "ip": "172.17.18.215",
+        "mac": "10:9f:41:ba:90:5b",
+        "hostname": "MBP327-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "304Gi",
+        "ram_info": "15G used, 7446M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 41,
+            "power_plugged": true,
+            "time_left": "7:05",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 175,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "coralie_smartelia"
+    },
+    {
+        "ip": "172.17.18.224",
+        "mac": "b0:be:83:5d:e1:1b",
+        "hostname": "MBP200-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "130Gi",
+        "ram_info": "15G used, 6292M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 46,
+            "power_plugged": true,
+            "time_left": "6:02",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 373,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "roxane_smartelia"
+    },
+    {
+        "ip": "172.17.19.9",
+        "mac": "a0:78:17:7e:6d:cd",
+        "hostname": "MBP172-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "106Gi",
+        "ram_info": "15G used, 5762M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 99,
+            "power_plugged": true,
+            "time_left": "14:58",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 533,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "eleonore_smartelia"
+    },
+    {
+        "ip": "172.17.19.80",
+        "mac": "Unknown",
+        "hostname": "MBP264-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "98Gi",
+        "ram_info": "13G used, 522M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 94,
+            "power_plugged": true,
+            "time_left": "0:37",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 245,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "eliot_smartelia"
+    },
+    {
+        "ip": "172.17.19.90",
+        "mac": "10:9f:41:c1:6d:7e",
+        "hostname": "MBP353-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.2",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "311Gi",
+        "ram_info": "15G used, 6114M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 85,
+            "power_plugged": true,
+            "time_left": "10:23",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 12,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Falia_smartelia"
+    },
+    {
+        "ip": "172.17.18.228",
+        "mac": "a4:cf:99:81:ca:82",
+        "hostname": "MBP275-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "96Gi",
+        "ram_info": "15G used, 3988M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 82,
+            "power_plugged": true,
+            "time_left": "1:01",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 225,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "oscar_smartelia"
+    },
+    {
+        "ip": "172.17.19.100",
+        "mac": "10:9f:41:c5:8f:7c",
+        "hostname": "MBP310-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "375Gi",
+        "ram_info": "15G used, 5934M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 85,
+            "power_plugged": true,
+            "time_left": "0:52",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 76,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "leon_smartelia"
+    },
+    {
+        "ip": "172.17.18.214",
+        "mac": "b0:be:83:57:da:6a",
+        "hostname": "MBP209-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "62Gi",
+        "ram_info": "13G used, 2157M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 52,
+            "power_plugged": true,
+            "time_left": "1:57",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 300,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "valentin_smartelia"
+    },
+    {
+        "ip": "172.17.18.234",
+        "mac": "a4:cf:99:81:7b:18",
+        "hostname": "MBP270-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "37Gi",
+        "ram_info": "15G used, 6349M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 97,
+            "power_plugged": true,
+            "time_left": "18:52",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 175,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "serena_pads"
+    },
+    {
+        "ip": "172.17.19.74",
+        "mac": "a4:cf:99:86:70:c8",
+        "hostname": "MBP282-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.4.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "169Gi",
+        "ram_info": "15G used, 581M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 89,
+            "power_plugged": true,
+            "time_left": "14:43",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 187,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "margaux345"
+    },
+    {
+        "ip": "172.17.19.89",
+        "mac": "a4:cf:99:7d:14:6a",
+        "hostname": "MBP279-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.4.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "126Gi",
+        "ram_info": "15G used, 998M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 91,
+            "power_plugged": true,
+            "time_left": "9:24",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 173,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "helga_smartelia"
+    },
+    {
+        "ip": "172.17.19.77",
+        "mac": "a4:cf:99:86:bd:ac",
+        "hostname": "MBP295-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.4.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "49Gi",
+        "ram_info": "15G used, 3717M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 87,
+            "power_plugged": true,
+            "time_left": "9:04",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 190,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "david_smartelia"
+    },
+    {
+        "ip": "172.17.19.43",
+        "mac": "36:77:fd:96:6f:9c",
+        "hostname": "MBP260-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "87Gi",
+        "ram_info": "15G used, 6262M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 87,
+            "power_plugged": true,
+            "time_left": "0:45",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 238,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "cassie_smartelia"
+    },
+    {
+        "ip": "172.17.19.82",
+        "mac": "Unknown",
+        "hostname": "MBP287-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "518Mi",
+        "ram_info": "15G used, 1827M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 62,
+            "power_plugged": true,
+            "time_left": "4:20",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 269,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "marius_smartelia"
+    },
+    {
+        "ip": "172.17.19.85",
+        "mac": "30:d8:75:98:dd:e0",
+        "hostname": "MBP222-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "13Gi",
+        "ram_info": "15G used, 5168M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 75,
+            "power_plugged": true,
+            "time_left": "10:19",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 233,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "sandra_smartelia"
+    },
+    {
+        "ip": "172.17.19.70",
+        "mac": "10:9f:41:bc:a2:cb",
+        "hostname": "MBP309-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "286Gi",
+        "ram_info": "15G used, 5297M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 72,
+            "power_plugged": true,
+            "time_left": "6:14",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 102,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "matteo_smartelia"
+    },
+    {
+        "ip": "172.17.19.88",
+        "mac": "10:9f:41:c1:a6:98",
+        "hostname": "MBP352-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "327Gi",
+        "ram_info": "15G used, 4256M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 99,
+            "power_plugged": true,
+            "time_left": "0:00",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 191,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "james_smartelia"
+    },
+    {
+        "ip": "172.17.19.84",
+        "mac": "9c:3e:53:81:c5:5d",
+        "hostname": "MBP230-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "12.4",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "12Gi",
+        "ram_info": "15G used, 70M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 81,
+            "power_plugged": true,
+            "time_left": "11:55",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 307,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "willy_smartelia"
+    },
+    {
+        "ip": "172.17.19.68",
+        "mac": "a0:78:17:7f:89:c4",
+        "hostname": "MBP158-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.0",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "122Gi",
+        "ram_info": "15G used, 6027M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 79,
+            "power_plugged": true,
+            "time_left": "8:26",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 539,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "eva_smartelia"
+    },
+    {
+        "ip": "172.17.19.22",
+        "mac": "Unknown",
+        "hostname": "MBP298-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "95Gi",
+        "ram_info": "15G used, 1756M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 75,
+            "power_plugged": true,
+            "time_left": "1:25",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 264,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "princia_smartelia"
+    },
+    {
+        "ip": "172.17.19.109",
+        "mac": "b0:be:83:5c:ae:96",
+        "hostname": "MBP201-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.0",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "173Gi",
+        "ram_info": "15G used, 1866M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 46,
+            "power_plugged": true,
+            "time_left": "3:09",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 437,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "alphonse_smartelia"
+    },
+    {
+        "ip": "172.17.19.114",
+        "mac": "a0:78:17:81:78:ff",
+        "hostname": "MBP160-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.5",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "138Gi",
+        "ram_info": "15G used, 7496M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 34,
+            "power_plugged": true,
+            "time_left": "2:48",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 413,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "colombe_smartelia"
+    },
+    {
+        "ip": "172.17.19.121",
+        "mac": "a4:cf:99:6b:a8:b5",
+        "hostname": "MBP254-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "124Gi",
+        "ram_info": "15G used, 3982M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 84,
+            "power_plugged": true,
+            "time_left": "13:52",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 168,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "irma_smartelia"
+    },
+    {
+        "ip": "172.17.19.87",
+        "mac": "a4:cf:99:7c:41:7e",
+        "hostname": "MBP291-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "131Gi",
+        "ram_info": "14G used, 2060M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 58,
+            "power_plugged": true,
+            "time_left": "4:12",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 205,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "maurice_smartelia"
+    },
+    {
+        "ip": "172.17.19.141",
+        "mac": "b0:be:83:57:72:e4",
+        "hostname": "MBP219-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "190Gi",
+        "ram_info": "14G used, 1250M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 77,
+            "power_plugged": true,
+            "time_left": "6:50",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 321,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "herve_smartelia"
+    },
+    {
+        "ip": "172.17.19.144",
+        "mac": "Unknown",
+        "hostname": "MBP302-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "106Gi",
+        "ram_info": "15G used, 1960M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 93,
+            "power_plugged": true,
+            "time_left": "0:49",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 249,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "irene_smartelia"
+    },
+    {
+        "ip": "172.17.19.97",
+        "mac": "12:21:8d:92:ed:c4",
+        "hostname": "MBP253-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "113Gi",
+        "ram_info": "15G used, 3166M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 97,
+            "power_plugged": true,
+            "time_left": "15:37",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 291,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "lauriane_smartelia"
+    },
+    {
+        "ip": "172.17.19.115",
+        "mac": "b0:be:83:61:b7:55",
+        "hostname": "MBP197-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "140Gi",
+        "ram_info": "15G used, 5461M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "11:59",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 392,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "jerry_smartelia"
+    },
+    {
+        "ip": "172.17.19.122",
+        "mac": "Unknown",
+        "hostname": "MBP345-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "260Gi",
+        "ram_info": "15G used, 7424M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 44,
+            "power_plugged": true,
+            "time_left": "2:22",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 332,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "julie_smartelia"
+    },
+    {
+        "ip": "172.17.19.171",
+        "mac": "74:8f:3c:ba:d4:5c",
+        "hostname": "MBP137-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "154Gi",
+        "ram_info": "14G used, 0B free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 32,
+            "power_plugged": true,
+            "time_left": "2:13",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 626,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Basilice_Smartelia"
+    },
+    {
+        "ip": "172.17.19.154",
+        "mac": "a4:cf:99:7f:99:39",
+        "hostname": "MBP304-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "104Gi",
+        "ram_info": "13G used, 1171M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 74,
+            "power_plugged": true,
+            "time_left": "12:33",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 189,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Laura_smartelia"
+    },
+    {
+        "ip": "172.17.19.169",
+        "mac": "a4:cf:99:85:14:ed",
+        "hostname": "MBP299-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.3",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "106Gi",
+        "ram_info": "12G used, 0B free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 82,
+            "power_plugged": true,
+            "time_left": "11:30",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 197,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Josie_Smartelia"
+    },
+    {
+        "ip": "172.17.19.164",
+        "mac": "b0:be:83:55:47:45",
+        "hostname": "MBP207-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "37Gi",
+        "ram_info": "14G used, 952M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 77,
+            "power_plugged": true,
+            "time_left": "11:48",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 306,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "olivia_smartelia"
+    },
+    {
+        "ip": "172.17.19.172",
+        "mac": "10:9f:41:c6:27:e3",
+        "hostname": "MBP332-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "11Gi",
+        "ram_info": "15G used, 4471M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 41,
+            "power_plugged": true,
+            "time_left": "4:09",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 45,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "alice_smartelia"
+    },
+    {
+        "ip": "172.17.19.137",
+        "mac": "Unknown",
+        "hostname": "MBP175-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.0",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "30Gi",
+        "ram_info": "15G used, 2380M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 33,
+            "power_plugged": true,
+            "time_left": "3:50",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 617,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "amandine_smartelia"
+    },
+    {
+        "ip": "172.17.19.165",
+        "mac": "a0:78:17:7f:4f:68",
+        "hostname": "MBP166-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.4.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "66Gi",
+        "ram_info": "15G used, 67M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 66,
+            "power_plugged": true,
+            "time_left": "6:18",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 567,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Benjamin_Smartelia"
+    },
+    {
+        "ip": "172.17.19.136",
+        "mac": "Unknown",
+        "hostname": "MBP76-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro12,1",
+        "macos_version": "12.6.8",
+        "model_identifier": "MacBookPro12,1",
+        "taille": "13 pouces",
+        "annee": 2015,
+        "disk_free": "48Gi",
+        "ram_info": "7975M used, 216M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 42,
+            "power_plugged": true,
+            "time_left": "2:04",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 2095,
+            "full_charge_capacity": 5034,
+            "condition": "Normal"
+        },
+        "current_user": "Stagiaire_IT"
+    },
+    {
+        "ip": "172.17.19.160",
+        "mac": "26:25:64:41:c8:78",
+        "hostname": "MBP165-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "12Gi",
+        "ram_info": "15G used, 1181M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 69,
+            "power_plugged": true,
+            "time_left": "6:08",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 499,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "alida_smartelia"
+    },
+    {
+        "ip": "172.17.19.152",
+        "mac": "2a:49:51:ab:8f:61",
+        "hostname": "MBP320-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "15.5",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "204Gi",
+        "ram_info": "15G used, 6816M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 42,
+            "power_plugged": true,
+            "time_left": "5:29",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 117,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "rodolphe_smartelia"
+    },
+    {
+        "ip": "172.17.19.198",
+        "mac": "66:90:78:f5:ce:2d",
+        "hostname": "MBP215-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "65Gi",
+        "ram_info": "15G used, 3389M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 69,
+            "power_plugged": true,
+            "time_left": "1:39",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 390,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "liam_smartelia"
+    },
+    {
+        "ip": "172.17.19.173",
+        "mac": "a4:cf:99:77:cd:a8",
+        "hostname": "MBP257-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "59Gi",
+        "ram_info": "15G used, 74M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "4:29",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 218,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Joachim_smartelia"
+    },
+    {
+        "ip": "172.17.19.186",
+        "mac": "10:9f:41:bf:7e:12",
+        "hostname": "MBP318-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac15,3",
+        "macos_version": "14.1",
+        "model_identifier": "Mac15,3",
+        "taille": "14 pouces",
+        "annee": 2023,
+        "disk_free": "291Gi",
+        "ram_info": "15G used, 5142M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 76,
+            "power_plugged": true,
+            "time_left": "4:23",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 182,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "claudia_pads"
+    },
+    {
+        "ip": "172.17.19.161",
+        "mac": "8e:f5:e5:8b:b8:5c",
+        "hostname": "MBP142-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "99Gi",
+        "ram_info": "15G used, 615M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 67,
+            "power_plugged": true,
+            "time_left": "6:32",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 432,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "abigaelle_smartelia"
+    },
+    {
+        "ip": "172.17.19.175",
+        "mac": "a0:78:17:83:fe:10",
+        "hostname": "MBP157-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "12.4",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "105Gi",
+        "ram_info": "15G used, 198M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 36,
+            "power_plugged": true,
+            "time_left": "3:34",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 474,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "simone_samrtelia"
+    },
+    {
+        "ip": "172.17.19.162",
+        "mac": "9c:3e:53:84:2f:a4",
+        "hostname": "MBP228-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "14.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "76Gi",
+        "ram_info": "15G used, 3532M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 47,
+            "power_plugged": true,
+            "time_left": "3:22",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 254,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "travis_smartelia"
+    },
+    {
+        "ip": "172.17.19.195",
+        "mac": "a4:cf:99:7b:d9:1c",
+        "hostname": "MBP283-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.2.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "114Gi",
+        "ram_info": "15G used, 1703M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 29,
+            "power_plugged": true,
+            "time_left": "3:15",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 194,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Ricardo_smartelia"
+    },
+    {
+        "ip": "172.17.19.196",
+        "mac": "Unknown",
+        "hostname": "MBP256-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "139Gi",
+        "ram_info": "15G used, 671M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 37,
+            "power_plugged": true,
+            "time_left": "5:29",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 251,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "Hans_Smartelia"
+    },
+    {
+        "ip": "172.17.19.131",
+        "mac": "f4:5c:89:b4:40:d9",
+        "hostname": "MBP69-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro12,1",
+        "macos_version": "11.6.5",
+        "model_identifier": "MacBookPro12,1",
+        "taille": "13 pouces",
+        "annee": 2015,
+        "disk_free": "160Gi",
+        "ram_info": "7274M used, 917M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 84,
+            "power_plugged": true,
+            "time_left": "3:58",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 2224,
+            "full_charge_capacity": 4315,
+            "condition": "Service Recommended"
+        },
+        "current_user": "Stagiaire_eTail"
+    },
+    {
+        "ip": "172.17.19.185",
+        "mac": "Unknown",
+        "hostname": "MBP267-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "144Gi",
+        "ram_info": "7554M used, 3721M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": "0:09",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 281,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "prisca_smartelia"
+    },
+    {
+        "ip": "172.17.19.209",
+        "mac": "be:2d:29:14:b2:f6",
+        "hostname": "MBP296-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "15.1.1",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "99Gi",
+        "ram_info": "15G used, 1658M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 100,
+            "power_plugged": true,
+            "time_left": null,
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 138,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "marjolaine_smartelia"
+    },
+    {
+        "ip": "172.17.19.187",
+        "mac": "a4:cf:99:6d:98:e5",
+        "hostname": "MBP258-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: Mac14,7",
+        "macos_version": "13.0",
+        "model_identifier": "Mac14,7",
+        "taille": "13 pouces",
+        "annee": 2022,
+        "disk_free": "50Gi",
+        "ram_info": "15G used, 8355M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 29,
+            "power_plugged": true,
+            "time_left": "1:50",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 302,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "matthias_smartelia"
+    },
+    {
+        "ip": "172.17.19.132",
+        "mac": "a0:78:17:80:2f:eb",
+        "hostname": "MBP161-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "14.0",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "21Gi",
+        "ram_info": "15G used, 5802M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 86,
+            "power_plugged": true,
+            "time_left": "8:25",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 387,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "rosalie_smartelia"
+    },
+    {
+        "ip": "172.17.19.188",
+        "mac": "a4:83:e7:21:c4:f3",
+        "hostname": "MBP128-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro15,4",
+        "macos_version": "13.1",
+        "model_identifier": "MacBookPro15,4",
+        "taille": "Unknown",
+        "annee": "Unknown",
+        "disk_free": "78Gi",
+        "ram_info": "8172M used, 981M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 66,
+            "power_plugged": true,
+            "time_left": "3:54",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 968,
+            "full_charge_capacity": 4150,
+            "condition": "Normal"
+        },
+        "current_user": "OfficeClerk_Smartelia"
+    },
+    {
+        "ip": "172.17.19.189",
+        "mac": "Unknown",
+        "hostname": "MBP176-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro17,1",
+        "macos_version": "15.1.1",
+        "model_identifier": "MacBookPro17,1",
+        "taille": "13 pouces",
+        "annee": 2020,
+        "disk_free": "65Gi",
+        "ram_info": "14G used, 3796M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 46,
+            "power_plugged": true,
+            "time_left": "3:34",
+            "drawing_from": "Battery Power"
+        },
+        "battery_details": {
+            "cycle_count": 580,
+            "full_charge_capacity": null,
+            "condition": "Normal"
+        },
+        "current_user": "eric_smartelia"
+    },
+    {
+        "ip": "172.17.19.197",
+        "mac": "Unknown",
+        "hostname": "MBP115-SMARTELIA.local",
+        "model_info": "Model Name: MacBook Pro       Model Identifier: MacBookPro15,1",
+        "macos_version": "13.5.1",
+        "model_identifier": "MacBookPro15,1",
+        "taille": "Unknown",
+        "annee": "Unknown",
+        "disk_free": "16Gi",
+        "ram_info": "16G used, 1076M free",
+        "open_apps": "",
+        "battery_status": {
+            "percent": 82,
+            "power_plugged": true,
+            "time_left": "1:04",
+            "drawing_from": "AC Power"
+        },
+        "battery_details": {
+            "cycle_count": 1171,
+            "full_charge_capacity": 5584,
+            "condition": "Service Recommended"
+        },
+        "current_user": "stagiaire_vyperf"
+    }
+]
