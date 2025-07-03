@@ -403,5 +403,40 @@ def main():
     else:
         print("\nAucune machine SMARTELIA trouvée")
 
+def merge_latest_machine_data():
+    """Fusionne tous les fichiers smartelia_machines_*.json et conserve la donnée la plus récente pour chaque machine."""
+    import glob
+    import re
+    from collections import defaultdict
+    
+    json_files = glob.glob("smartelia_machines_*.json")
+    # Associer chaque fichier à son timestamp
+    file_date_pattern = re.compile(r"smartelia_machines_(\d{8}_\d{6})\\.json")
+    file_dates = {}
+    for f in json_files:
+        m = re.search(r"smartelia_machines_(\d{8}_\d{6})\\.json", f)
+        if m:
+            file_dates[f] = m.group(1)
+    # Trier les fichiers par date croissante
+    sorted_files = sorted(file_dates.items(), key=lambda x: x[1])
+    # Pour chaque hostname, garder la donnée la plus récente
+    latest_data = {}
+    for f, date in sorted_files:
+        try:
+            with open(f, 'r', encoding='utf-8') as jf:
+                machines = json.load(jf)
+                for machine in machines:
+                    hostname = machine.get('hostname')
+                    if not hostname:
+                        continue
+                    # On écrase si plus récent
+                    latest_data[hostname] = machine
+        except Exception as e:
+            print(f"Erreur lors de la lecture de {f}: {e}")
+    # Sauvegarder le résultat
+    with open('smartelia_machines_latest.json', 'w', encoding='utf-8') as out:
+        json.dump(list(latest_data.values()), out, ensure_ascii=False, indent=4)
+    print(f"Fusion terminée : {len(latest_data)} machines uniques dans smartelia_machines_latest.json")
+
 if __name__ == "__main__":
     main() 

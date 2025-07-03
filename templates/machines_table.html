@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+{% macro disk_to_gb(val) %}
+    {%- if val is string -%}
+        {%- set v = val|replace('Gi','')|replace('Mi','')|replace('B','')|replace(',','.')|float(0) -%}
+        {%- if 'Gi' in val %}{{ v }}
+        {%- elif 'Mi' in val %}{{ (v/1024)|round(2) }}
+        {%- elif 'B' in val %}{{ (v/1024/1024/1024)|round(2) }}
+        {%- else %}{{ v }}
+        {%- endif %}
+    {%- else -%}
+        0
+    {%- endif %}
+{% endmacro %}
+<html>
+<head>
+    <title>Machines SMARTELIA</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 98vw;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px 18px 18px 18px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #2d3a4b;
+            font-size: 1.5em;
+        }
+        .search-bar {
+            margin-bottom: 18px;
+        }
+        .search-bar input {
+            padding: 8px 12px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 1em;
+        }
+        .options-bar {
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-btn {
+            background: #1976d2;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dropdown-btn:after {
+            content: '\25BC';
+            font-size: 0.8em;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #fff;
+            min-width: 220px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 10;
+            padding: 12px 16px;
+            top: 110%;
+            left: 0;
+        }
+        .dropdown-content label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.98em;
+            cursor: pointer;
+        }
+        .dropdown-content label:last-child {
+            margin-bottom: 0;
+        }
+        .dropdown-content input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .dropdown.show .dropdown-content {
+            display: block;
+        }
+        .dropdown-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 5;
+        }
+        .dropdown.show .dropdown-backdrop {
+            display: block;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 900px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 0.97em;
+        }
+        th {
+            background: #f2f6fa;
+            color: #2d3a4b;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            cursor: pointer;
+            user-select: none;
+        }
+        th.sortable:hover {
+            background: #e3eafc;
+        }
+        .sort-indicator {
+            margin-left: 4px;
+            font-size: 0.9em;
+        }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #e6f0fa; }
+        .disk-low { background: #ffdddd !important; color: #b71c1c; font-weight: bold; }
+        .battery-low { background: #fff3e0 !important; color: #e65100; font-weight: bold; }
+        .power-icon { text-align: center; font-size: 1.3em; }
+        .pagination {
+            margin: 18px 0 0 0;
+            text-align: center;
+        }
+        .pagination button {
+            margin: 0 2px;
+            padding: 6px 14px;
+            border: none;
+            background: #e0e0e0;
+            color: #2d3a4b;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .pagination button.active, .pagination button:hover {
+            background: #1976d2;
+            color: #fff;
+        }
+        .pagination span {
+            margin: 0 10px;
+            font-size: 1em;
+        }
+    </style>
+    <script>
+        let currentPage = 1;
+        let rowsPerPage = 50;
+        let visibleColumns = [];
+        let sortCol = 0;
+        let sortDir = 1; // 1 = asc, -1 = desc
+        function initOptions() {
+            visibleColumns = Array.from(document.querySelectorAll('.col-checkbox')).map(cb => cb.checked);
+        }
+        function updateColumns() {
+            visibleColumns = Array.from(document.querySelectorAll('.col-checkbox')).map(cb => cb.checked);
+            const table = document.getElementById("machinesTable");
+            const trs = table.getElementsByTagName("tr");
+            for (let i = 0; i < trs.length; i++) {
+                const tds = trs[i].children;
+                for (let j = 0; j < tds.length; j++) {
+                    tds[j].style.display = visibleColumns[j] ? '' : 'none';
+                }
+            }
+        }
+        function updateRowsPerPage() {
+            rowsPerPage = parseInt(document.getElementById('rowsPerPage').value);
+            currentPage = 1;
+            renderTable();
+        }
+        function globalSearch() {
+            currentPage = 1;
+            renderTable();
+        }
+        function sortTable(colIdx) {
+            if (sortCol === colIdx) {
+                sortDir = -sortDir;
+            } else {
+                sortCol = colIdx;
+                sortDir = 1;
+            }
+            renderTable();
+        }
+        function renderTable() {
+            const input = document.getElementById("globalSearch").value.toUpperCase();
+            const table = document.getElementById("machinesTable");
+            const tr = Array.from(table.getElementsByTagName("tr")).slice(1); // skip header
+            // Trier les lignes selon la colonne sélectionnée
+            tr.sort((a, b) => {
+                const aVal = a.children[sortCol]?.innerText || '';
+                const bVal = b.children[sortCol]?.innerText || '';
+                // Essayer de comparer comme nombre si possible
+                const aNum = parseFloat(aVal.replace(/[^0-9.-]+/g, ''));
+                const bNum = parseFloat(bVal.replace(/[^0-9.-]+/g, ''));
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return (aNum - bNum) * sortDir;
+                }
+                return aVal.localeCompare(bVal, undefined, {numeric: true}) * sortDir;
+            });
+            // Réinsérer les lignes triées
+            const tbody = table.getElementsByTagName('tbody')[0];
+            tr.forEach(row => tbody.appendChild(row));
+            // Filtrage et pagination
+            let visibleRows = [];
+            for (let i = 0; i < tr.length; i++) {
+                let showRow = false;
+                const tds = tr[i].getElementsByTagName("td");
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j].style.display !== 'none' && tds[j].textContent.toUpperCase().indexOf(input) > -1) {
+                        showRow = true;
+                        break;
+                    }
+                }
+                tr[i].style.display = showRow ? "" : "none";
+                if (showRow) visibleRows.push(tr[i]);
+            }
+            for (let i = 0; i < visibleRows.length; i++) {
+                visibleRows[i].style.display = (i >= (currentPage-1)*rowsPerPage && i < currentPage*rowsPerPage) ? "" : "none";
+            }
+            const pageCount = Math.ceil(visibleRows.length / rowsPerPage);
+            let paginationHtml = '';
+            if (pageCount > 1) {
+                paginationHtml += `<button onclick='gotoPage(1)' ${currentPage===1?'disabled class=\"active\"':''}>&laquo; Première</button>`;
+                paginationHtml += `<button onclick='gotoPage(${currentPage-1})' ${currentPage===1?'disabled class=\"active\"':''}>Précédent</button>`;
+                paginationHtml += `<span>Page ${currentPage} / ${pageCount}</span>`;
+                paginationHtml += `<button onclick='gotoPage(${currentPage+1})' ${currentPage===pageCount?'disabled class=\"active\"':''}>Suivant</button>`;
+                paginationHtml += `<button onclick='gotoPage(${pageCount})' ${currentPage===pageCount?'disabled class=\"active\"':''}>&raquo; Dernière</button>`;
+            }
+            document.getElementById("pagination").innerHTML = paginationHtml;
+            // Mettre à jour les icônes de tri
+            const ths = table.getElementsByTagName('th');
+            for (let i = 0; i < ths.length; i++) {
+                const indicator = ths[i].querySelector('.sort-indicator');
+                if (indicator) {
+                    if (i === sortCol) {
+                        indicator.innerHTML = sortDir === 1 ? '▲' : '▼';
+                    } else {
+                        indicator.innerHTML = '';
+                    }
+                }
+            }
+        }
+        function gotoPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+        function toggleDropdown() {
+            document.getElementById('dropdown').classList.toggle('show');
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-btn')) {
+                var dropdowns = document.getElementsByClassName("dropdown");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+        window.onload = function() {
+            initOptions();
+            updateColumns();
+            renderTable();
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Liste des machines SMARTELIA</h2>
+        <div class="options-bar">
+            <div class="dropdown" id="dropdown">
+                <button class="dropdown-btn" type="button" onclick="toggleDropdown()">
+                    <span style="font-size:1.1em;">🗂️</span> Colonnes à afficher
+                </button>
+                <div class="dropdown-content">
+                    {% for col in columns %}
+                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> {{ col.replace('_', ' ').title() }}</label>
+                    {% endfor %}
+                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> Source Alimentation</label>
+                </div>
+            </div>
+            <div>
+                <label for="rowsPerPage">Lignes/page :</label>
+                <select id="rowsPerPage" onchange="updateRowsPerPage();">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="globalSearch" onkeyup="globalSearch()" placeholder="Recherche globale..." />
+        </div>
+        <div class="table-responsive">
+            <table id="machinesTable">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th class="sortable" onclick="sortTable({{ loop.index0 }})">
+                            {{ col.replace('_', ' ').title() }}
+                            <span class="sort-indicator"></span>
+                        </th>
+                        {% endfor %}
+                        <th>Source Alimentation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set sorted_data = data|sort(attribute=columns[0]) %}
+                    {% for entry in sorted_data %}
+                    <tr>
+                        {% for col in columns %}
+                        {# Coloriage conditionnel #}
+                        {% set val = entry.get(col, '') %}
+                        {% if col == 'disk_free' %}
+                            {% set disk_gb = disk_to_gb(val)|float %}
+                            <td class="{{ 'disk-low' if disk_gb < 50 else '' }}">
+                                {{ val }}
+                            </td>
+                        {% elif col == 'battery_status' %}
+                            {% if val is mapping %}
+                                {% set percent = val.get('percent', 100) %}
+                                <td class="{{ 'battery-low' if percent is number and percent < 35 else '' }}">
+                                    {% for k, v in val.items() %}{{ k }}: {{ v }}<br>{% endfor %}
+                                </td>
+                            {% else %}
+                                <td>{{ val }}</td>
+                            {% endif %}
+                        {% elif col == 'battery_details' %}
+                            <td>
+                                {% set max_capacity = val.get('max_capacity', None) %}
+                                {% if max_capacity is not none %}
+                                    Capacité max : {{ max_capacity }} mAh<br>
+                                {% endif %}
+                                {% for k, v in val.items() %}
+                                    {% if k != 'max_capacity' %}{{ k }}: {{ v }}<br>{% endif %}
+                                {% endfor %}
+                            </td>
+                        {% else %}
+                            <td>
+                                {% if val is mapping %}
+                                    {% for k, v in val.items() %}{{ k }}: {{ v }}<br>{% endfor %}
+                                {% else %}
+                                    {{ val }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        {% endfor %}
+                        {# Colonne image source alimentation #}
+                        <td class="power-icon">
+                            {% set batt = entry.get('battery_status', {}) %}
+                            {% if batt is mapping %}
+                                {% set source = batt.get('drawing_from', '') %}
+                                {% if source == 'AC Power' %}
+                                    <span title="Sur secteur">🔌</span>
+                                {% elif source == 'Battery Power' %}
+                                    <span title="Sur batterie">🔋</span>
+                                {% else %}
+                                    <span title="Inconnu">❓</span>
+                                {% endif %}
+                            {% else %}
+                                <span title="Inconnu">❓</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</body>
+</html> 
