@@ -12,3 +12,13 @@
 .txt
 .config
 .env
+*.log
+*.csv
+*.json
+*.txt
+*.config
+*.env
+*.log
+*.csv
+*.json
+*.txt
