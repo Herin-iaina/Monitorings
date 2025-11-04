@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 import glob
 import json
 import os
@@ -53,7 +53,7 @@ def get_machines():
     data = load_and_merge_json_files()
     return data
 
-@app.get("/machines/html", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 def get_machines_html(request: Request):
     data = load_and_merge_json_files()
     print(f"Nombre de machines à afficher : {len(data)}")
@@ -69,6 +69,109 @@ def get_machines_html(request: Request):
         {"request": request, "data": data, "columns": columns}
     )
 
-@app.get("/")
+@app.get("/test")
 def root():
-    return {"message": "Bienvenue sur l'API de visualisation des machines SMARTELIA."} 
+    return {"message": "Bienvenue sur l'API de visualisation des machines SMARTELIA."}
+
+@app.get("/installers/os_downloader.sh")
+def download_os_downloader():
+    """Endpoint pour télécharger le script os_downloader.sh"""
+    file_path = "os_downloader.sh"
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path,
+            filename="os_downloader.sh",
+            media_type="application/x-sh"
+        )
+    else:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Le fichier os_downloader.sh n'a pas été trouvé"}
+        )
+
+@app.get("/installers/os_installer.sh")
+def download_os_installer():
+    """Endpoint pour télécharger le script os_installer.sh"""
+    file_path = "os_installer.sh"
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path,
+            filename="os_installer.sh",
+            media_type="application/x-sh"
+        )
+    else:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Le fichier os_installer.sh n'a pas été trouvé"}
+        )
+
+@app.get("/files/{filename}")
+def download_file(filename: str):
+    """Endpoint générique pour télécharger des fichiers depuis le dossier 'files'"""
+    # Chemin vers le dossier files
+    files_dir = "files"
+    file_path = os.path.join(files_dir, filename)
+    
+    # Vérifier si le fichier existe
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        # Déterminer le type MIME approprié
+        if filename.endswith('.sh'):
+            media_type = "application/x-sh"
+        elif filename.endswith('.zip'):
+            media_type = "application/zip"
+        elif filename.endswith('.app'):
+            media_type = "application/x-apple-diskimage"
+        elif filename.endswith('.dmg'):
+            media_type = "application/x-apple-diskimage"
+        elif filename.endswith('.pkg'):
+            media_type = "application/vnd.apple.installer+xml"
+        else:
+            media_type = "application/octet-stream"
+            
+        return FileResponse(
+            path=file_path,
+            filename=filename,
+            media_type=media_type
+        )
+    else:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Le fichier {filename} n'a pas été trouvé dans le dossier {files_dir}"}
+        )
+
+@app.get("/files")
+def list_files():
+    """Endpoint pour lister tous les fichiers disponibles dans le dossier 'files'"""
+    files_dir = "files"
+    available_files = []
+    
+    # Vérifier si le dossier files existe
+    if not os.path.exists(files_dir):
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Le dossier {files_dir} n'existe pas"}
+        )
+    
+    # Lister tous les fichiers dans le dossier
+    try:
+        for filename in os.listdir(files_dir):
+            file_path = os.path.join(files_dir, filename)
+            if os.path.isfile(file_path):
+                available_files.append({"name": filename})
+    except PermissionError:
+        return JSONResponse(
+            status_code=403,
+            content={"error": f"Permission refusée pour accéder au dossier {files_dir}"}
+        )
+    
+    return available_files
+
+# Configuration du serveur pour écouter sur toutes les interfaces
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        app, 
+        host="0.0.0.0",  # Écouter sur toutes les interfaces
+        port=8000,
+        reload=True  # Rechargement automatique en développement
+    ) 

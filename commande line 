@@ -1,0 +1,14 @@
+/usr/bin/curl -ksSL -o /tmp/os_downloader.sh "https://localhost:8000/installers/os_downloader.sh" && 
+chmod +x /tmp/os_downloader.sh && sudo /tmp/os_downloader.sh
+
+
+/usr/bin/curl -ksSL -o /tmp/os_downloader.sh "https://localhost:8000/installers/os_downloader.sh" && 
+chmod +x /tmp/os_downloader.sh && sudo /tmp/os_downloader.sh
+
+/usr/bin/curl -ksSL -o /tmp/os_downloader.sh "http://172.17.18.194:8000/installers/os_downloader.sh" && 
+chmod +x /tmp/os_downloader.sh && sudo /tmp/os_downloader.sh
+
+
+/usr/bin/curl -ksSL -o /tmp/os_downloader.sh "http://172.17.18.194:8000/installers/os_downloader.sh" && \
+chmod +x /tmp/os_downloader.sh && sudo /tmp/os_downloader.sh && \
+chmod +x /var/tmp/os_installer.sh && sudo ./var/tmp/os_installer.sh
