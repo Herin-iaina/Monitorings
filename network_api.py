@@ -27,6 +27,16 @@ def load_and_merge_json_files() -> List[Dict]:
     # Pour chaque hostname, garder la donnée la plus récente
     latest_data = {}
     for file, date in sorted_files:
+        # tenter de parser la date extraite du nom de fichier et la formater lisiblement
+        nice_date = date
+        try:
+            from datetime import datetime
+            dt = datetime.strptime(date, "%Y%m%d_%H%M%S")
+            nice_date = dt.strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            # si parse échoue, conserver la valeur brute
+            pass
+
         with open(file, 'r', encoding='utf-8') as f:
             try:
                 data = json.load(f)
@@ -34,8 +44,8 @@ def load_and_merge_json_files() -> List[Dict]:
                     hostname = entry.get('hostname')
                     if not hostname:
                         continue
-                    # Ajout de la date de récupération (depuis le nom du fichier)
-                    entry['date_recuperation'] = date
+                    # Ajout de la date de récupération (format lisible)
+                    entry['date_recuperation'] = nice_date
                     # Remplacement de full_charge_capacity par max_capacity
                     battery_details = entry.get('battery_details', {})
                     if 'full_charge_capacity' in battery_details:
