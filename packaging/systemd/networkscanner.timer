@@ -1,0 +1,10 @@
+[Unit]
+Description=Run SMARTELIA network scanner every 10 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+Unit=networkscanner.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=SMARTELIA network scanner (oneshot)
+After=network.target
+
+[Service]
+Type=oneshot
+User=%i
+WorkingDirectory=/path/to/networkscan
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/env python3 /path/to/networkscan/host_runner.py
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

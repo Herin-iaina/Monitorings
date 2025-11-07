@@ -95,5 +95,69 @@ Besoin d'aide ?
   - modifie la fréquence du scan pour la rendre configurable via variable d'environnement,
 alors dites-le et je ferai les modifications.
 
+Executer le scanner sur l'hôte (recommandé pour le scan réseau)
+---------------------------------------------------------
+Si vous voulez que le scanner fasse des pings/arp sur votre réseau local, il est préférable de l'exécuter sur l'hôte (ou sur une machine Linux) plutôt que dans un conteneur Docker sur macOS — Docker Desktop sur macOS n'expose pas toujours les interfaces réseau locales comme un conteneur Linux natif.
+
+Deux options fournies dans ce dépôt :
+
+1) systemd (Linux)
+
+ - Fichiers exemples : `packaging/systemd/networkscanner.service` et `packaging/systemd/networkscanner.timer`.
+ - Installation (exécuter en tant que root ou avec sudo) :
+
+```bash
+# Copier les fichiers vers /etc/systemd/system
+sudo cp packaging/systemd/networkscanner.service /etc/systemd/system/
+sudo cp packaging/systemd/networkscanner.timer /etc/systemd/system/
+
+# Editez `/etc/systemd/system/networkscanner.service` et remplacez `/path/to/networkscan` par le chemin absolu vers le dossier du projet
+# (ex: /home/ubuntu/networkscan ou /opt/networkscan). Assurez-vous que ExecStart utilise le bon interpréteur python (/usr/bin/python3 ou /usr/bin/env python3).
+
+# Recharger systemd, activer et démarrer le timer :
+sudo systemctl daemon-reload
+sudo systemctl enable --now networkscanner.timer
+
+# Vérifier le statut
+sudo systemctl status networkscanner.timer
+sudo journalctl -u networkscanner.service -f
+```
+
+Le timer déclenchera le service toutes les 10 minutes. Le service exécute `host_runner.py` (qui appelle `network_scanner.main()` une fois et quitte). Les fichiers `smartelia_machines_*.json` seront écrits dans le répertoire du projet.
+
+2) launchd (macOS)
+
+ - Fichier exemple : `packaging/launchd/com.smartelia.networkscanner.plist`.
+ - Installation basique :
+
+```bash
+# Copier le plist dans ~/Library/LaunchAgents pour un utilisateur ou /Library/LaunchDaemons pour tous les utilisateurs (requiert sudo)
+cp packaging/launchd/com.smartelia.networkscanner.plist ~/Library/LaunchAgents/
+
+# Éditez le fichier plist et remplacez `/path/to/networkscan` par le chemin absolu vers le dossier du projet
+
+# Charger le daemon (pour l'utilisateur courant)
+launchctl load ~/Library/LaunchAgents/com.smartelia.networkscanner.plist
+
+# Vérifier les logs
+tail -f /var/log/networkscanner.out.log /var/log/networkscanner.err.log
+```
+
+Notes importantes :
+- Dans les deux cas, éditez les chemins (`/path/to/networkscan`) pour pointer vers le répertoire réel du dépôt sur votre hôte.
+- Assurez-vous que l'utilisateur qui exécute le service a accès au répertoire (permissions d'écriture pour produire les JSON/CSV) et que Python 3 est installé.
+- Sur macOS, `StartInterval` de launchd exécute périodiquement le script (ici toutes les 600s). Vous pouvez aussi préférer exécuter `host_runner.py` via cron si vous le souhaitez.
+
+Fichiers ajoutés pour l'exécution hôte
+-------------------------------------
+- `host_runner.py` : script qui nettoie les anciens JSON (garde 5 max) et exécute `network_scanner.main()` une fois.
+- `packaging/systemd/networkscanner.service` et `packaging/systemd/networkscanner.timer` : exemples pour Linux/systemd.
+- `packaging/launchd/com.smartelia.networkscanner.plist` : exemple pour macOS/launchd.
+
+Si vous voulez que je :
+- adapte le service pour exécuter `runner.py` (API + scanner) sur l'hôte au lieu de `network_scanner.py`, ou
+- crée un petit script d'installation qui met en place automatiquement les unités systemd/launchd (avec vérification des chemins),
+je peux l'ajouter.
+
 ---
 Fichier généré automatiquement lors de la demande d'ajout du README.

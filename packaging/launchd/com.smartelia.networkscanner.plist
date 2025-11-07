@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.smartelia.networkscanner</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/env</string>
+    <string>python3</string>
+    <string>/path/to/networkscan/host_runner.py</string>
+  </array>
+  <!-- Run every 600 seconds -->
+  <key>StartInterval</key>
+  <integer>600</integer>
+  <key>WorkingDirectory</key>
+  <string>/path/to/networkscan</string>
+  <key>StandardOutPath</key>
+  <string>/var/log/networkscanner.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/var/log/networkscanner.err.log</string>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>
