@@ -7,12 +7,14 @@ WORKDIR /app
 
 # Installer dépendances système nécessaires pour certaines wheels/nettoyage
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       build-essential \
-       libssl-dev \
-       libffi-dev \
-       openssh-client \
-    && rm -rf /var/lib/apt/lists/*
+     && apt-get install -y --no-install-recommends \
+         build-essential \
+         libssl-dev \
+         libffi-dev \
+         openssh-client \
+         iputils-ping \
+         net-tools \
+     && rm -rf /var/lib/apt/lists/*
 
 # Installer dépendances Python
 COPY requirements.txt /app/requirements.txt
