@@ -13,7 +13,7 @@
 {% endmacro %}
 <html>
 <head>
-    <title>Machines SMARTELIA</title>
+    <title>SMARTELIA Machines</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -212,13 +212,13 @@
             const input = document.getElementById("globalSearch").value.toUpperCase();
             const table = document.getElementById("machinesTable");
             const tr = Array.from(table.getElementsByTagName("tr")).slice(1); // skip header
-            // Trier les lignes selon la colonne sélectionnée
+            // Sort rows by the selected column
             tr.sort((a, b) => {
                 const aCell = a.children[sortCol];
                 const bCell = b.children[sortCol];
                 const aVal = aCell?.innerText || '';
                 const bVal = bCell?.innerText || '';
-                // Si dataset.sortValue présent, l'utiliser en priorité (tri numérique ou lexicographique)
+                // If dataset.sortValue is present, prefer it (numeric or lexicographic sort)
                 const aData = aCell?.dataset?.sortValue;
                 const bData = bCell?.dataset?.sortValue;
                 if (aData !== undefined && bData !== undefined) {
@@ -229,7 +229,7 @@
                     }
                     return String(aData).localeCompare(String(bData), undefined, {numeric: true}) * sortDir;
                 }
-                // Essayer de comparer comme nombre si possible (fallback)
+                // Try to compare as numbers when possible (fallback)
                 const aNum = parseFloat(aVal.replace(/[^0-9.-]+/g, ''));
                 const bNum = parseFloat(bVal.replace(/[^0-9.-]+/g, ''));
                 if (!isNaN(aNum) && !isNaN(bNum)) {
@@ -237,10 +237,10 @@
                 }
                 return aVal.localeCompare(bVal, undefined, {numeric: true}) * sortDir;
             });
-            // Réinsérer les lignes triées
+            // Re-insert the sorted rows
             const tbody = table.getElementsByTagName('tbody')[0];
             tr.forEach(row => tbody.appendChild(row));
-            // Filtrage et pagination
+            // Filtering and pagination
             let visibleRows = [];
             for (let i = 0; i < tr.length; i++) {
                 let showRow = false;
@@ -260,14 +260,14 @@
             const pageCount = Math.ceil(visibleRows.length / rowsPerPage);
             let paginationHtml = '';
             if (pageCount > 1) {
-                paginationHtml += `<button onclick='gotoPage(1)' ${currentPage===1?'disabled class=\"active\"':''}>&laquo; Première</button>`;
-                paginationHtml += `<button onclick='gotoPage(${currentPage-1})' ${currentPage===1?'disabled class=\"active\"':''}>Précédent</button>`;
-                paginationHtml += `<span>Page ${currentPage} / ${pageCount}</span>`;
-                paginationHtml += `<button onclick='gotoPage(${currentPage+1})' ${currentPage===pageCount?'disabled class=\"active\"':''}>Suivant</button>`;
-                paginationHtml += `<button onclick='gotoPage(${pageCount})' ${currentPage===pageCount?'disabled class=\"active\"':''}>&raquo; Dernière</button>`;
+                 paginationHtml += `<button onclick='gotoPage(1)' ${currentPage===1?'disabled class="active"':''}>&laquo; First</button>`;
+                 paginationHtml += `<button onclick='gotoPage(${currentPage-1})' ${currentPage===1?'disabled class="active"':''}>Previous</button>`;
+                 paginationHtml += `<span>Page ${currentPage} / ${pageCount}</span>`;
+                 paginationHtml += `<button onclick='gotoPage(${currentPage+1})' ${currentPage===pageCount?'disabled class="active"':''}>Next</button>`;
+                 paginationHtml += `<button onclick='gotoPage(${pageCount})' ${currentPage===pageCount?'disabled class="active"':''}>&raquo; Last</button>`;
             }
             document.getElementById("pagination").innerHTML = paginationHtml;
-            // Mettre à jour les icônes de tri
+            // Update sort icons
             const ths = table.getElementsByTagName('th');
             for (let i = 0; i < ths.length; i++) {
                 const indicator = ths[i].querySelector('.sort-indicator');
@@ -307,21 +307,21 @@
 </head>
 <body>
     <div class="container">
-        <h2>Liste des machines SMARTELIA</h2>
+    <h2>List of SMARTELIA machines</h2>
         <div class="options-bar">
             <div class="dropdown" id="dropdown">
                 <button class="dropdown-btn" type="button" onclick="toggleDropdown()">
-                    <span style="font-size:1.1em;">🗂️</span> Colonnes à afficher
+                    <span style="font-size:1.1em;">🗂️</span> Columns to display
                 </button>
                 <div class="dropdown-content">
                     {% for col in columns %}
                     <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> {{ col.replace('_', ' ').title() }}</label>
                     {% endfor %}
-                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> Source Alimentation</label>
+                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> Power Source</label>
                 </div>
             </div>
             <div>
-                <label for="rowsPerPage">Lignes/page :</label>
+                <label for="rowsPerPage">Rows per page:</label>
                 <select id="rowsPerPage" onchange="updateRowsPerPage();">
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -332,7 +332,7 @@
             </div>
         </div>
         <div class="search-bar">
-            <input type="text" id="globalSearch" onkeyup="globalSearch()" placeholder="Recherche globale..." />
+            <input type="text" id="globalSearch" onkeyup="globalSearch()" placeholder="Global search..." />
         </div>
         <div class="table-responsive">
             <table id="machinesTable">
@@ -344,7 +344,7 @@
                             <span class="sort-indicator"></span>
                         </th>
                         {% endfor %}
-                        <th>Source Alimentation</th>
+                        <th>Power Source</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -352,7 +352,7 @@
                     {% for entry in sorted_data %}
                     <tr>
                         {% for col in columns %}
-                        {# Coloriage conditionnel #}
+                        {# Conditional highlighting #}
                         {% set val = entry.get(col, '') %}
                         {% if col == 'disk_free' %}
                             {% set disk_gb = disk_to_gb(val)|float %}
@@ -362,21 +362,36 @@
                         {% elif col == 'battery_status' %}
                             {% if val is mapping %}
                                 {% set percent = val.get('percent', None) %}
-                                <td class="{{ 'battery-low' if percent is not none and percent < 35 else '' }}" data-sort-value="{{ percent if percent is not none else 0 }}">
-                                    {% for k, v in val.items() %}{{ k }}: {{ v }}<br>{% endfor %}
+                                    <td class="{{ 'battery-low' if percent is not none and percent < 35 else '' }}" data-sort-value="{{ percent if percent is not none else 0 }}">
+                                    Percent: {% if percent is not none %}{{ percent }} %{% else %}N/A{% endif %}
                                 </td>
                             {% else %}
-                                <td data-sort-value="0">{{ val }}</td>
+                                <td data-sort-value="0">Percent: N/A</td>
                             {% endif %}
                         {% elif col == 'battery_details' %}
                             <td>
+                                {# Include other info from battery_status here (except percent) #}
+                                {% set batt = entry.get('battery_status', {}) %}
+                                {% if batt is mapping %}
+                                    power_plugged: {{ batt.get('power_plugged') }}<br>
+                                    time_left: {{ batt.get('time_left') }}<br>
+                                    drawing_from: {{ batt.get('drawing_from') }}<br>
+                                {% endif %}
                                 {% set max_capacity = val.get('max_capacity', None) %}
                                 {% if max_capacity is not none %}
-                                    Capacité max : {{ max_capacity }} mAh<br>
+                                    Max capacity : {{ max_capacity }} mAh<br>
                                 {% endif %}
                                 {% for k, v in val.items() %}
                                     {% if k != 'max_capacity' %}{{ k }}: {{ v }}<br>{% endif %}
                                 {% endfor %}
+                            </td>
+                        {% elif col == 'charger_100_since' %}
+                            <td>
+                                {{ entry.get('charger_100_since') or '' }}
+                            </td>
+                        {% elif col == 'charger_100_duration' %}
+                            <td data-sort-value="{{ entry.get('charger_100_duration_seconds', 0) }}">
+                                {{ entry.get('charger_100_duration') or '' }}
                             </td>
                         {% else %}
                             <td>
@@ -388,20 +403,20 @@
                             </td>
                         {% endif %}
                         {% endfor %}
-                        {# Colonne image source alimentation #}
+                        {# Power source icon column #}
                         <td class="power-icon">
                             {% set batt = entry.get('battery_status', {}) %}
                             {% if batt is mapping %}
                                 {% set source = batt.get('drawing_from', '') %}
                                 {% if source == 'AC Power' %}
-                                    <span title="Sur secteur">🔌</span>
+                                    <span title="On AC">🔌</span>
                                 {% elif source == 'Battery Power' %}
-                                    <span title="Sur batterie">🔋</span>
+                                    <span title="On Battery">🔋</span>
                                 {% else %}
-                                    <span title="Inconnu">❓</span>
+                                    <span title="Unknown">❓</span>
                                 {% endif %}
                             {% else %}
-                                <span title="Inconnu">❓</span>
+                                <span title="Unknown">❓</span>
                             {% endif %}
                         </td>
                     </tr>

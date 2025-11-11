@@ -17,35 +17,55 @@ from dotenv import load_dotenv
 USE_SSH = True  # Mettre à False pour désactiver SSH
 
 macbook_pro_models = {
-    "Mac16,6": ("14 pouces", 2024),
     "Mac16,8": ("14 pouces", 2024),
     "Mac16,7": ("16 pouces", 2024),
+    "Mac16,6": ("14 pouces", 2024),
     "Mac16,5": ("16 pouces", 2024),
-    "Mac15,3": ("14 pouces", 2023),
-    "Mac15,6": ("14 pouces", 2023),
     "Mac16,1": ("14 pouces", 2024),
-    "Mac15,8": ("14 pouces", 2023),
-    "Mac15,10":("14 pouces", 2023),
-    "Mac15,7": ("16 pouces", 2023),
-    "Mac15,9": ("16 pouces", 2023),
-    "Mac15,11":("16 pouces", 2023),
-    "Mac14,5": ("14 pouces", 2023),
+
+    "Mac15,11": ("16 pouces", 2023),
+    "Mac15,10": ("14 pouces", 2023),
+    "Mac15,9":  ("16 pouces", 2023),
+    "Mac15,8":  ("14 pouces", 2023),
+    "Mac15,7":  ("16 pouces", 2023),
+    "Mac15,6":  ("14 pouces", 2023),
+    "Mac15,3":  ("14 pouces", 2023),
+    "Mac14,10":("16 pouces", 2023),
     "Mac14,9": ("14 pouces", 2023),
     "Mac14,6": ("16 pouces", 2023),
-    "Mac14,10":("16 pouces", 2023),
+    "Mac14,5": ("14 pouces", 2023),
+
     "Mac14,7": ("13 pouces", 2022),
-    "MacBookPro18,3":("14 pouces", 2021),
+
     "MacBookPro18,4":("14 pouces", 2021),
-    "MacBookPro18,1":("16 pouces", 2021),
+    "MacBookPro18,3":("14 pouces", 2021),
     "MacBookPro18,2":("16 pouces", 2021),
+    "MacBookPro18,1":("16 pouces", 2021),
+
     "MacBookPro17,1":("13 pouces", 2020),
     "MacBookPro16,3":("13 pouces", 2020),
     "MacBookPro16,2":("13 pouces", 2020),
-    "MacBookPro16,1":("16 pouces", 2019),
+
     "MacBookPro16,4":("16 pouces", 2019),
-    "MacBookPro12,1": ("13 pouces", 2015),
-    "MacBookPro14,2": ("13 pouces", 2017),
+    "MacBookPro16,1":("16 pouces", 2019),
+
+    "MacBookPro15,2":("13 pouces", 2018),
+    "MacBookPro15,1":("15 pouces", 2018),
+
+    "MacBookPro14,3":("15 pouces", 2017),
+    "MacBookPro14,2":("13 pouces", 2017),
+    "MacBookPro14,1":("13 pouces", 2017),
+
+    "MacBookPro13,3":("15 pouces", 2016),
+    "MacBookPro13,2":("13 pouces", 2016),
+    "MacBookPro13,1":("13 pouces", 2016),
+
+    "MacBookPro12,1":("13 pouces", 2015),
+    "MacBookPro11,3":("15 pouces", 2015),
+    "MacBookPro11,2":("15 pouces", 2015),
+    "MacBookPro11,1":("13 pouces", 2015),
 }
+
 
 load_dotenv()
 SSH_USERNAME = os.getenv("SSH_USERNAME")
@@ -220,8 +240,8 @@ def scan_ip(ip, ssh_credentials=None):
                 'disk_free': ssh_result.get('disk_free', 'Unknown'),
                 'ram_info': ssh_result.get('ram_info', 'Unknown'),
                 'open_apps': ssh_result.get('open_apps', 'Unknown'),
-                'battery_status': ssh_result.get('battery_status', 'Unknown'),
-                'battery_details': ssh_result.get('battery_details', 'Unknown'),
+                'battery_status': ssh_result.get('battery_status', {}),
+                'battery_details': ssh_result.get('battery_details', {}),
                 'current_user': current_user
             }
     except:

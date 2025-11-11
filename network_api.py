@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 import glob
 import json
 import os
+from datetime import datetime, timedelta
 from typing import List, Dict
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
@@ -26,6 +27,10 @@ def load_and_merge_json_files() -> List[Dict]:
     sorted_files = sorted(file_dates.items(), key=lambda x: x[1])
     # Pour chaque hostname, garder la donnée la plus récente
     latest_data = {}
+    # trackers pour calculer depuis quand le chargeur est branché à 100%
+    charger_starts = {}
+    latest_dt = {}
+
     for file, date in sorted_files:
         # tenter de parser la date extraite du nom de fichier et la formater lisiblement
         nice_date = date
@@ -51,10 +56,95 @@ def load_and_merge_json_files() -> List[Dict]:
                     if 'full_charge_capacity' in battery_details:
                         battery_details['max_capacity'] = battery_details.get('full_charge_capacity')
                     entry['battery_details'] = battery_details
+                    # tracker du dernier dt connu pour ce hostname
+                    if 'dt' in locals() and isinstance(dt, datetime):
+                        latest_dt[hostname] = dt
+
+                    # déterminer si, à ce moment, la machine est branchée et à 100%
+                    batt = entry.get('battery_status', {}) or {}
+                    percent = None
+                    power_plugged = None
+                    try:
+                        if isinstance(batt, dict):
+                            percent = batt.get('percent')
+                            power_plugged = batt.get('power_plugged')
+                    except Exception:
+                        pass
+
+                    # Prendre aussi en compte le champ drawing_from (ex: 'AC Power' / 'Battery Power')
+                    drawing_from = None
+                    try:
+                        if isinstance(batt, dict):
+                            drawing_from = batt.get('drawing_from')
+                    except Exception:
+                        drawing_from = None
+
+                    is_charging_100 = False
+                    if percent is not None and percent == 100:
+                        # Si drawing_from indique 'Battery', considérer comme non branchée
+                        if drawing_from:
+                            sdraw = str(drawing_from).lower()
+                            if 'battery' in sdraw:
+                                is_charging_100 = False
+                            else:
+                                # otherwise fallback to power_plugged or textual checks
+                                if isinstance(power_plugged, bool):
+                                    is_charging_100 = power_plugged is True
+                                else:
+                                    s = str(power_plugged).lower()
+                                    if 'ac' in s or 'charge' in s or 'true' in s or 'oui' in s:
+                                        is_charging_100 = True
+                        else:
+                            # Pas de drawing_from, utiliser power_plugged
+                            if isinstance(power_plugged, bool):
+                                is_charging_100 = power_plugged is True
+                            else:
+                                s = str(power_plugged).lower()
+                                if 'ac' in s or 'charge' in s or 'true' in s or 'oui' in s:
+                                    is_charging_100 = True
+
+                    # mettre à jour le démarrage du mode 100%+secteur
+                    if is_charging_100 and 'dt' in locals() and isinstance(dt, datetime):
+                        if hostname not in charger_starts:
+                            charger_starts[hostname] = dt
+                    else:
+                        # si condition non satisfaite, supprimer tout démarrage enregistré
+                        if hostname in charger_starts:
+                            del charger_starts[hostname]
+
                     # On écrase si plus récent
                     latest_data[hostname] = entry
             except Exception as e:
                 print(f"Erreur lors de la lecture de {file}: {e}")
+    # Après avoir parcouru l'historique, compléter les entrées finales avec la durée si applicable
+    for hostname, entry in latest_data.items():
+        start = charger_starts.get(hostname)
+        last = latest_dt.get(hostname)
+        if start and last and isinstance(start, datetime) and isinstance(last, datetime):
+            delta = last - start
+            secs = int(delta.total_seconds())
+            # formater en human readable
+            days, rem = divmod(secs, 86400)
+            hours, rem = divmod(rem, 3600)
+            minutes, seconds = divmod(rem, 60)
+            parts = []
+            if days:
+                parts.append(f"{days}d")
+            if hours:
+                parts.append(f"{hours}h")
+            if minutes:
+                parts.append(f"{minutes}m")
+            if seconds and not parts:
+                parts.append(f"{seconds}s")
+            human = ' '.join(parts) if parts else '0s'
+            entry['charger_100_since'] = start.strftime("%Y-%m-%d %H:%M:%S")
+            entry['charger_100_duration_seconds'] = secs
+            entry['charger_100_duration'] = human
+        else:
+            entry['charger_100_since'] = None
+            entry['charger_100_duration_seconds'] = 0
+            entry['charger_100_duration'] = None
+
     return list(latest_data.values())
 
 @app.get("/machines", response_class=JSONResponse)
@@ -72,7 +162,8 @@ def get_machines_html(request: Request):
     columns = [
         'ip', 'mac', 'hostname', 'model_info', 'macos_version', 'model_identifier',
         'taille', 'annee', 'disk_free', 'ram_info', 'open_apps',
-        'battery_status', 'battery_details', 'current_user', 'date_recuperation'
+        'battery_status', 'battery_details', 'current_user', 'date_recuperation',
+        'charger_100_since', 'charger_100_duration'
     ]
     return templates.TemplateResponse(
         "machines_table.html",
