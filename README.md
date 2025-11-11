@@ -51,6 +51,7 @@ Vérifications / debug
 
 ```bash
 docker logs -f networkscan
+docker exec -it monitoring /bin/sh
 ```
 
 - Vérifier l'API :

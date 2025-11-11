@@ -214,9 +214,22 @@
             const tr = Array.from(table.getElementsByTagName("tr")).slice(1); // skip header
             // Trier les lignes selon la colonne sélectionnée
             tr.sort((a, b) => {
-                const aVal = a.children[sortCol]?.innerText || '';
-                const bVal = b.children[sortCol]?.innerText || '';
-                // Essayer de comparer comme nombre si possible
+                const aCell = a.children[sortCol];
+                const bCell = b.children[sortCol];
+                const aVal = aCell?.innerText || '';
+                const bVal = bCell?.innerText || '';
+                // Si dataset.sortValue présent, l'utiliser en priorité (tri numérique ou lexicographique)
+                const aData = aCell?.dataset?.sortValue;
+                const bData = bCell?.dataset?.sortValue;
+                if (aData !== undefined && bData !== undefined) {
+                    const aNum = parseFloat(aData);
+                    const bNum = parseFloat(bData);
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return (aNum - bNum) * sortDir;
+                    }
+                    return String(aData).localeCompare(String(bData), undefined, {numeric: true}) * sortDir;
+                }
+                // Essayer de comparer comme nombre si possible (fallback)
                 const aNum = parseFloat(aVal.replace(/[^0-9.-]+/g, ''));
                 const bNum = parseFloat(bVal.replace(/[^0-9.-]+/g, ''));
                 if (!isNaN(aNum) && !isNaN(bNum)) {
@@ -343,17 +356,17 @@
                         {% set val = entry.get(col, '') %}
                         {% if col == 'disk_free' %}
                             {% set disk_gb = disk_to_gb(val)|float %}
-                            <td class="{{ 'disk-low' if disk_gb < 50 else '' }}">
+                            <td class="{{ 'disk-low' if disk_gb < 50 else '' }}" data-sort-value="{{ '%.2f' % disk_gb }}">
                                 {{ val }}
                             </td>
                         {% elif col == 'battery_status' %}
                             {% if val is mapping %}
-                                {% set percent = val.get('percent', 100) %}
-                                <td class="{{ 'battery-low' if percent is number and percent < 35 else '' }}">
+                                {% set percent = val.get('percent', None) %}
+                                <td class="{{ 'battery-low' if percent is not none and percent < 35 else '' }}" data-sort-value="{{ percent if percent is not none else 0 }}">
                                     {% for k, v in val.items() %}{{ k }}: {{ v }}<br>{% endfor %}
                                 </td>
                             {% else %}
-                                <td>{{ val }}</td>
+                                <td data-sort-value="0">{{ val }}</td>
                             {% endif %}
                         {% elif col == 'battery_details' %}
                             <td>
