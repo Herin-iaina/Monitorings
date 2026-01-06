@@ -19,20 +19,41 @@ Prérequis
 - Docker (pour exécuter l'image construite)
 - (optionnel) `.env` contenant les variables d'authentification SSH si `USE_SSH` est activé :
 
-  SSH_USERNAME=smartelia
-  SSH_PASSWORD=VotreMotDePasseSSH
+  SSH_USERNAME=your_username
+  SSH_PASSWORD=your_password
 
-Comment construire l'image Docker
-1. Placez-vous à la racine du projet (le dossier contenant `Dockerfile`).
-2. Construisez l'image :
+Démarrage rapide avec Docker Compose (Recommandé)
 
+1. Assurez-vous d'avoir Docker et Docker Compose installés.
+2. (Optionnel) Créez un fichier `.env` avec vos identifiants SSH si nécessaire :
+   ```
+   SSH_USERNAME=smartelia
+   SSH_PASSWORD=VotreMotDePasseSSH
+   ```
+3. Lancez le projet :
+
+```bash
+docker-compose up --build -d
+```
+
+L'application sera accessible sur :
+- Interface Web : http://localhost:8000/
+- API JSON : http://localhost:8000/machines
+
+Arrêter le projet :
+```bash
+docker-compose down
+```
+
+Construction manuelle (Alternative)
+Si vous ne souhaitez pas utiliser docker-compose :
+
+1. Construisez l'image :
 ```bash
 docker build -t networkscan:latest .
 ```
 
-Lancer le conteneur
-- Exemple minimal (expose l'API sur le port 8000) :
-
+2. Lancez le conteneur :
 ```bash
 docker run -d \
   --name networkscan \
