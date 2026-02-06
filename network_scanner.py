@@ -12,6 +12,7 @@ import csv
 import os
 import json
 from dotenv import load_dotenv
+import email_notifier
 
 # Configuration SSH
 USE_SSH = True  # Mettre à False pour désactiver SSH
@@ -369,6 +370,10 @@ def main():
         filename = f"smartelia_machines_{timestamp}.csv"
         save_to_csv(results, filename)
         print(f"\nNombre de machines SMARTELIA trouvées : {len(results)}")
+        
+        # Vérifier et envoyer des notifications d'alerte
+        print("\n🔔 Vérification des alertes...")
+        email_notifier.check_and_notify(results)
     else:
         print("\nAucune machine SMARTELIA trouvée")
 

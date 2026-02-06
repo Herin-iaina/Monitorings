@@ -3,7 +3,9 @@
 Ce dépôt contient des scripts Python pour scanner un réseau (détecter des Mac), récupérer des informations via SSH et exposer une API web pour visualiser les machines trouvées.
 
 Principaux composants
-- `network_scanner.py` : scanner réseau principal. Ping des IPs, tentative de connexion SSH (si activé) pour récupérer infos (hostname, modèle, batterie, disque, mémoire, etc.).
+- `network_scanner.py` : scanner réseau principal. Ping des IPs, tentative de connexion SSH (si activé) pour récupérer infos (hostname, modèle, batterie, disque, mémoire, etc.). Intègre le système de notification par email.
+- `email_notifier.py` : module de notification par email via Gmail. Envoie des alertes automatiques quand un Mac atteint un seuil de stockage critique (≤15 Go).
+- `email_template.html` : template HTML pour les emails d'alerte avec design professionnel et sections dédiées aux alertes batterie.
 - `network_api.py` : API FastAPI qui sert une interface web et des endpoints JSON (fusionne les fichiers `smartelia_machines_*.json`).
 - `runner.py` : script de démarrage utilisé en image Docker — démarre l'API (uvicorn) et exécute le scanner toutes les 10 minutes. Gère aussi le nettoyage des fichiers JSON.
 - `Dockerfile` : image Docker minimale basée sur `python:3.11-slim` qui installe les dépendances et lance `runner.py`.
@@ -21,6 +23,53 @@ Prérequis
 
   SSH_USERNAME=your_username
   SSH_PASSWORD=your_password
+
+Système de Notification par Email
+----------------------------------
+Le système envoie automatiquement des alertes par email via Gmail lorsqu'un Mac atteint un seuil de stockage critique.
+
+### Fonctionnalités des Alertes
+
+**Déclencheur :** Un email est envoyé dès qu'une machine atteint **≤15 Go** d'espace disque disponible.
+
+**Contenu de l'email :**
+1. **📊 Récapitulatif de la Situation** : Liste toutes les machines avec <30 Go d'espace disponible (code couleur : rouge <15 Go, orange 15-30 Go)
+2. **🔋 Batteries Pleines Toujours Branchées** : Machines à 100% de batterie mais toujours branchées (gestion de batterie à optimiser)
+3. **🪫 Batteries Faibles** : Machines avec batterie <30% (nécessitent une recharge urgente)
+
+### Configuration Gmail
+
+Pour activer les notifications, ajoutez ces variables dans votre fichier `.env` :
+
+```bash
+# Configuration Gmail
+GMAIL_USER=votre.email@gmail.com
+GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+ALERT_RECIPIENTS=destinataire1@example.com,destinataire2@example.com
+```
+
+**Important :** Vous devez générer un **mot de passe d'application Gmail** (pas votre mot de passe habituel) :
+1. Allez sur [myaccount.google.com](https://myaccount.google.com)
+2. Sécurité → Validation en deux étapes (activez-la si nécessaire)
+3. Mots de passe d'application → Créer un nouveau mot de passe
+4. Copiez le mot de passe généré (16 caractères)
+
+### Seuils d'Alerte
+
+| Seuil | Valeur | Action |
+|-------|--------|--------|
+| Stockage Critique | ≤ 15 Go | Déclenche l'envoi d'un email |
+| Stockage Avertissement | < 30 Go | Inclus dans le récapitulatif |
+| Batterie Pleine | = 100% + branché | Alerté dans section dédiée |
+| Batterie Faible | < 30% | Alerté dans section dédiée |
+
+### Test du Système de Notification
+
+Pour tester l'envoi d'email avec des données fictives :
+
+```bash
+python3 email_notifier.py
+```
 
 Démarrage rapide avec Docker Compose (Recommandé)
 
