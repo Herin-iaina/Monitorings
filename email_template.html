@@ -176,7 +176,7 @@
                         <td class="{{ machine.storage_class }}">{{ machine.disk_free }}</td>
                         <td>{{ machine.battery_percent }}</td>
                         <td>
-                            {% if machine.power_plugged %}
+                            {% if machine.is_on_ac_power %}
                             <span class="badge-yes">Oui</span>
                             {% else %}
                             <span class="badge-no">Non</span>
@@ -251,7 +251,7 @@
                         <td class="{{ machine.storage_class }}">{{ machine.disk_free }}</td>
                         <td style="color: #d63031; font-weight: 600;">{{ machine.battery_percent }}</td>
                         <td>
-                            {% if machine.power_plugged %}
+                            {% if machine.is_on_ac_power %}
                             <span class="badge-yes">Oui</span>
                             {% else %}
                             <span class="badge-no">Non</span>

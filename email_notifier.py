@@ -90,7 +90,10 @@ def prepare_email_data(machines):
         # Récupération des infos batterie
         battery_status = machine.get('battery_status', {})
         battery_percent = battery_status.get('percent', 'N/A')
-        power_plugged = battery_status.get('power_plugged', False)
+        drawing_from = battery_status.get('drawing_from', '')
+        
+        # La machine est sur secteur si drawing_from contient "AC Power"
+        is_on_ac_power = 'AC Power' in drawing_from
         
         # Formatage pour l'affichage
         battery_display = f"{battery_percent}%" if battery_percent != 'N/A' else 'N/A'
@@ -103,7 +106,8 @@ def prepare_email_data(machines):
             'disk_space_gb': disk_space_gb,
             'battery_percent': battery_display,
             'battery_raw': battery_raw,
-            'power_plugged': power_plugged,
+            'is_on_ac_power': is_on_ac_power,
+            'drawing_from': drawing_from,
             'storage_class': get_storage_class(disk_space_gb),
             'current_user': machine.get('current_user', 'Unknown')
         }
@@ -116,8 +120,8 @@ def prepare_email_data(machines):
         if disk_space_gb < WARNING_THRESHOLD:
             low_storage_machines.append(machine_data)
         
-        # Machines à 100% de batterie mais toujours branchées
-        if battery_raw == 100 and power_plugged:
+        # Machines à 100% de batterie mais toujours branchées sur secteur (AC Power)
+        if battery_raw == 100 and is_on_ac_power:
             full_battery_still_charging.append(machine_data)
         
         # Machines avec batterie < 30%
@@ -234,42 +238,42 @@ if __name__ == "__main__":
             'hostname': 'MacBook-SMARTELIA-042',
             'ip': '192.168.1.42',
             'disk_free': '12Gi',
-            'battery_status': {'percent': 45, 'power_plugged': False},
+            'battery_status': {'percent': 45, 'drawing_from': 'Battery Power'},
             'current_user': 'jdupont'
         },
         {
             'hostname': 'iMac-PRO-015',
             'ip': '192.168.1.15',
             'disk_free': '28Gi',
-            'battery_status': {'percent': 88, 'power_plugged': True},
+            'battery_status': {'percent': 88, 'drawing_from': 'AC Power'},
             'current_user': 'mmartin'
         },
         {
             'hostname': 'MacMini-DEV-003',
             'ip': '192.168.1.3',
             'disk_free': '14Gi',
-            'battery_status': {'percent': 100, 'power_plugged': True},
+            'battery_status': {'percent': 100, 'drawing_from': 'AC Power'},
             'current_user': 'admin'
         },
         {
             'hostname': 'MacBook-AIR-021',
             'ip': '192.168.1.21',
             'disk_free': '2Gi',
-            'battery_status': {'percent': 25, 'power_plugged': False},
+            'battery_status': {'percent': 25, 'drawing_from': 'Battery Power'},
             'current_user': 'ldurand'
         },
         {
             'hostname': 'MacBook-PRO-055',
             'ip': '192.168.1.55',
             'disk_free': '120Gi',
-            'battery_status': {'percent': 100, 'power_plugged': True},
+            'battery_status': {'percent': 100, 'drawing_from': 'AC Power'},
             'current_user': 'smartelia'
         },
         {
             'hostname': 'MacBook-AIR-033',
             'ip': '192.168.1.33',
             'disk_free': '85Gi',
-            'battery_status': {'percent': 18, 'power_plugged': True},
+            'battery_status': {'percent': 18, 'drawing_from': 'AC Power'},
             'current_user': 'pbernard'
         }
     ]
