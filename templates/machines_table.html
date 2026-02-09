@@ -1,173 +1,657 @@
 <!DOCTYPE html>
 {% macro disk_to_gb(val) %}
-    {%- if val is string -%}
-        {%- set v = val|replace('Gi','')|replace('Mi','')|replace('B','')|replace(',','.')|float(0) -%}
-        {%- if 'Gi' in val %}{{ v }}
-        {%- elif 'Mi' in val %}{{ (v/1024)|round(2) }}
-        {%- elif 'B' in val %}{{ (v/1024/1024/1024)|round(2) }}
-        {%- else %}{{ v }}
-        {%- endif %}
-    {%- else -%}
-        0
-    {%- endif %}
+{%- if val is string -%}
+{%- set v = val|replace('Gi','')|replace('Mi','')|replace('B','')|replace(',','.')|float(0) -%}
+{%- if 'Gi' in val %}{{ v }}
+{%- elif 'Mi' in val %}{{ (v/1024)|round(2) }}
+{%- elif 'B' in val %}{{ (v/1024/1024/1024)|round(2) }}
+{%- else %}{{ v }}
+{%- endif %}
+{%- else -%}
+0
+{%- endif %}
 {% endmacro %}
-<html>
+<html lang="fr">
+
 <head>
-    <title>SMARTELIA Machines</title>
+    <title>SMARTELIA Monitoring Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f7f7f7;
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --bg-hover: rgba(59, 130, 246, 0.1);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --border-color: rgba(148, 163, 184, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-hover: rgba(59, 130, 246, 0.08);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 98vw;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 24px 18px 18px 18px;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 50%, var(--bg-primary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+            transition: var(--transition);
         }
-        h2 {
-            margin-top: 0;
-            color: #2d3a4b;
-            font-size: 1.5em;
+
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 50%, #e2e8f0 100%);
         }
-        .search-bar {
-            margin-bottom: 18px;
-        }
-        .search-bar input {
-            padding: 8px 12px;
-            border: 1px solid #bbb;
-            border-radius: 5px;
-            width: 300px;
-            font-size: 1em;
-        }
-        .options-bar {
-            margin-bottom: 18px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 18px;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-btn {
-            background: #1976d2;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .dropdown-btn:after {
-            content: '\25BC';
-            font-size: 0.8em;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: #fff;
-            min-width: 220px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-            border-radius: 8px;
-            z-index: 10;
-            padding: 12px 16px;
-            top: 110%;
-            left: 0;
-        }
-        .dropdown-content label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.98em;
-            cursor: pointer;
-        }
-        .dropdown-content label:last-child {
-            margin-bottom: 0;
-        }
-        .dropdown-content input[type="checkbox"] {
-            margin-right: 8px;
-        }
-        .dropdown.show .dropdown-content {
-            display: block;
-        }
-        .dropdown-backdrop {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 5;
-        }
-        .dropdown.show .dropdown-backdrop {
-            display: block;
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: 900px;
-            background: #fff;
-        }
-        th, td {
-            border: 1px solid #e0e0e0;
-            padding: 8px 10px;
-            text-align: left;
-            font-size: 0.97em;
-        }
-        th {
-            background: #f2f6fa;
-            color: #2d3a4b;
+
+        /* Compact Header */
+        .header {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
             position: sticky;
             top: 0;
-            z-index: 2;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-badge strong {
+            color: var(--accent-blue);
+        }
+
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             cursor: pointer;
-            user-select: none;
+            transition: var(--transition);
+            font-size: 16px;
         }
-        th.sortable:hover {
-            background: #e3eafc;
+
+        .icon-btn:hover {
+            border-color: var(--accent-blue);
+            background: var(--bg-hover);
         }
+
+        /* Main Container - Compact */
+        .main-container {
+            padding: 12px 16px;
+            max-width: 100%;
+        }
+
+        /* Compact Controls Bar */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        select {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            backdrop-filter: blur(4px);
+        }
+
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        /* Column Drawer */
+        .column-drawer {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            z-index: 250;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .drawer-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .drawer-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .drawer-close:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: white;
+        }
+
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .drawer-section {
+            margin-bottom: 16px;
+        }
+
+        .drawer-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 4px;
+        }
+
+        .column-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .column-item:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .column-item.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+        }
+
+        .column-item input {
+            display: none;
+        }
+
+        .column-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .column-item.active .column-checkbox {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .column-item.active .column-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+        }
+
+        .column-label {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .drawer-actions {
+            padding: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+        }
+
+        .drawer-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Table Container - Full Width */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-scroll {
+            max-height: calc(100vh - 180px);
+            overflow: auto;
+        }
+
+        .table-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .table-scroll::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 3px;
+        }
+
+        .table-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(30, 41, 59, 0.95) 100%);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 2px solid var(--accent-blue);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        [data-theme="light"] th {
+            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        th:hover {
+            color: var(--accent-blue);
+        }
+
+        th.sorted {
+            color: var(--accent-blue);
+        }
+
         .sort-indicator {
             margin-left: 4px;
-            font-size: 0.9em;
+            opacity: 0.7;
+            font-size: 0.7rem;
         }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #e6f0fa; }
-        .disk-low { background: #ffdddd !important; color: #b71c1c; font-weight: bold; }
-        .battery-low { background: #fff3e0 !important; color: #e65100; font-weight: bold; }
-        .power-icon { text-align: center; font-size: 1.3em; }
-        .pagination {
-            margin: 18px 0 0 0;
-            text-align: center;
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-primary);
         }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .disk-low {
+            background: rgba(239, 68, 68, 0.08) !important;
+        }
+
+        .disk-low td {
+            color: var(--accent-red) !important;
+        }
+
+        .battery-low {
+            background: rgba(245, 158, 11, 0.08) !important;
+        }
+
+        .battery-low td {
+            color: var(--accent-orange) !important;
+        }
+
+        .battery-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .battery-progress {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+            min-width: 40px;
+        }
+
+        .battery-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .battery-fill.high {
+            background: var(--accent-green);
+        }
+
+        .battery-fill.medium {
+            background: var(--accent-orange);
+        }
+
+        .battery-fill.low {
+            background: var(--accent-red);
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            margin-right: 6px;
+        }
+
+        /* Footer Pagination */
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
         .pagination button {
-            margin: 0 2px;
-            padding: 6px 14px;
-            border: none;
-            background: #e0e0e0;
-            color: #2d3a4b;
-            border-radius: 4px;
-            font-size: 1em;
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
-        .pagination button.active, .pagination button:hover {
-            background: #1976d2;
-            color: #fff;
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
         }
-        .pagination span {
-            margin: 0 10px;
-            font-size: 1em;
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            padding: 0 12px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 12px;
+            }
+
+            .main-container {
+                padding: 8px;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-wrapper {
+                min-width: 100%;
+            }
         }
     </style>
     <script>
@@ -175,12 +659,36 @@
         let rowsPerPage = 50;
         let visibleColumns = [];
         let sortCol = 0;
-        let sortDir = 1; // 1 = asc, -1 = desc
+        let sortDir = 1;
+        const defaultHiddenColumns = [1, 3]; // MAC, Model Info
+
         function initOptions() {
-            visibleColumns = Array.from(document.querySelectorAll('.col-checkbox')).map(cb => cb.checked);
+            const items = document.querySelectorAll('.column-item');
+            visibleColumns = Array.from(items).map((item, idx) => {
+                const isHidden = defaultHiddenColumns.includes(idx);
+                const checkbox = item.querySelector('input');
+                if (isHidden) {
+                    checkbox.checked = false;
+                    item.classList.remove('active');
+                } else {
+                    checkbox.checked = true;
+                    item.classList.add('active');
+                }
+                return !isHidden;
+            });
         }
+
+        function toggleColumn(idx) {
+            const item = document.querySelectorAll('.column-item')[idx];
+            const checkbox = item.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('active');
+            updateColumns();
+            renderTable();
+        }
+
         function updateColumns() {
-            visibleColumns = Array.from(document.querySelectorAll('.col-checkbox')).map(cb => cb.checked);
+            visibleColumns = Array.from(document.querySelectorAll('.column-item input')).map(cb => cb.checked);
             const table = document.getElementById("machinesTable");
             const trs = table.getElementsByTagName("tr");
             for (let i = 0; i < trs.length; i++) {
@@ -190,241 +698,326 @@
                 }
             }
         }
+
+        function selectAllColumns() {
+            document.querySelectorAll('.column-item').forEach((item, idx) => {
+                item.querySelector('input').checked = true;
+                item.classList.add('active');
+            });
+            updateColumns();
+            renderTable();
+        }
+
+        function deselectAllColumns() {
+            document.querySelectorAll('.column-item').forEach((item, idx) => {
+                item.querySelector('input').checked = false;
+                item.classList.remove('active');
+            });
+            updateColumns();
+            renderTable();
+        }
+
         function updateRowsPerPage() {
             rowsPerPage = parseInt(document.getElementById('rowsPerPage').value);
             currentPage = 1;
             renderTable();
         }
-        function globalSearch() {
-            currentPage = 1;
-            renderTable();
-        }
+
+        function globalSearch() { currentPage = 1; renderTable(); }
+
         function sortTable(colIdx) {
-            if (sortCol === colIdx) {
-                sortDir = -sortDir;
-            } else {
-                sortCol = colIdx;
-                sortDir = 1;
-            }
+            if (sortCol === colIdx) { sortDir = -sortDir; }
+            else { sortCol = colIdx; sortDir = 1; }
             renderTable();
         }
+
         function renderTable() {
             const input = document.getElementById("globalSearch").value.toUpperCase();
             const table = document.getElementById("machinesTable");
-            const tr = Array.from(table.getElementsByTagName("tr")).slice(1); // skip header
-            // Sort rows by the selected column
+            const tr = Array.from(table.getElementsByTagName("tr")).slice(1);
+
             tr.sort((a, b) => {
                 const aCell = a.children[sortCol];
                 const bCell = b.children[sortCol];
-                const aVal = aCell?.innerText || '';
-                const bVal = bCell?.innerText || '';
-                // If dataset.sortValue is present, prefer it (numeric or lexicographic sort)
                 const aData = aCell?.dataset?.sortValue;
                 const bData = bCell?.dataset?.sortValue;
                 if (aData !== undefined && bData !== undefined) {
-                    const aNum = parseFloat(aData);
-                    const bNum = parseFloat(bData);
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                        return (aNum - bNum) * sortDir;
-                    }
-                    return String(aData).localeCompare(String(bData), undefined, {numeric: true}) * sortDir;
+                    const aNum = parseFloat(aData), bNum = parseFloat(bData);
+                    if (!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum) * sortDir;
+                    return String(aData).localeCompare(String(bData), undefined, { numeric: true }) * sortDir;
                 }
-                // Try to compare as numbers when possible (fallback)
-                const aNum = parseFloat(aVal.replace(/[^0-9.-]+/g, ''));
-                const bNum = parseFloat(bVal.replace(/[^0-9.-]+/g, ''));
-                if (!isNaN(aNum) && !isNaN(bNum)) {
-                    return (aNum - bNum) * sortDir;
-                }
-                return aVal.localeCompare(bVal, undefined, {numeric: true}) * sortDir;
+                const aVal = aCell?.innerText || '', bVal = bCell?.innerText || '';
+                const aNum = parseFloat(aVal.replace(/[^0-9.-]+/g, '')), bNum = parseFloat(bVal.replace(/[^0-9.-]+/g, ''));
+                if (!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum) * sortDir;
+                return aVal.localeCompare(bVal, undefined, { numeric: true }) * sortDir;
             });
-            // Re-insert the sorted rows
+
             const tbody = table.getElementsByTagName('tbody')[0];
             tr.forEach(row => tbody.appendChild(row));
-            // Filtering and pagination
+
             let visibleRows = [];
             for (let i = 0; i < tr.length; i++) {
                 let showRow = false;
                 const tds = tr[i].getElementsByTagName("td");
                 for (let j = 0; j < tds.length; j++) {
                     if (tds[j].style.display !== 'none' && tds[j].textContent.toUpperCase().indexOf(input) > -1) {
-                        showRow = true;
-                        break;
+                        showRow = true; break;
                     }
                 }
                 tr[i].style.display = showRow ? "" : "none";
                 if (showRow) visibleRows.push(tr[i]);
             }
+
             for (let i = 0; i < visibleRows.length; i++) {
-                visibleRows[i].style.display = (i >= (currentPage-1)*rowsPerPage && i < currentPage*rowsPerPage) ? "" : "none";
+                visibleRows[i].style.display = (i >= (currentPage - 1) * rowsPerPage && i < currentPage * rowsPerPage) ? "" : "none";
             }
+
             const pageCount = Math.ceil(visibleRows.length / rowsPerPage);
-            let paginationHtml = '';
+            let html = '';
             if (pageCount > 1) {
-                 paginationHtml += `<button onclick='gotoPage(1)' ${currentPage===1?'disabled class="active"':''}>&laquo; First</button>`;
-                 paginationHtml += `<button onclick='gotoPage(${currentPage-1})' ${currentPage===1?'disabled class="active"':''}>Previous</button>`;
-                 paginationHtml += `<span>Page ${currentPage} / ${pageCount}</span>`;
-                 paginationHtml += `<button onclick='gotoPage(${currentPage+1})' ${currentPage===pageCount?'disabled class="active"':''}>Next</button>`;
-                 paginationHtml += `<button onclick='gotoPage(${pageCount})' ${currentPage===pageCount?'disabled class="active"':''}>&raquo; Last</button>`;
+                html += `<button onclick='gotoPage(1)' ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
+                html += `<button onclick='gotoPage(${currentPage - 1})' ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+                html += `<span class="page-info">${currentPage}/${pageCount} (${visibleRows.length})</span>`;
+                html += `<button onclick='gotoPage(${currentPage + 1})' ${currentPage === pageCount ? 'disabled' : ''}>›</button>`;
+                html += `<button onclick='gotoPage(${pageCount})' ${currentPage === pageCount ? 'disabled' : ''}>&raquo;</button>`;
+            } else {
+                html = `<span class="page-info">${visibleRows.length} machine(s)</span>`;
             }
-            document.getElementById("pagination").innerHTML = paginationHtml;
-            // Update sort icons
+            document.getElementById("pagination").innerHTML = html;
+
             const ths = table.getElementsByTagName('th');
             for (let i = 0; i < ths.length; i++) {
                 const indicator = ths[i].querySelector('.sort-indicator');
+                ths[i].classList.remove('sorted');
                 if (indicator) {
-                    if (i === sortCol) {
-                        indicator.innerHTML = sortDir === 1 ? '▲' : '▼';
-                    } else {
-                        indicator.innerHTML = '';
-                    }
+                    if (i === sortCol) { indicator.innerHTML = sortDir === 1 ? '▲' : '▼'; ths[i].classList.add('sorted'); }
+                    else { indicator.innerHTML = ''; }
                 }
             }
         }
-        function gotoPage(page) {
-            currentPage = page;
-            renderTable();
+
+        function gotoPage(page) { currentPage = page; renderTable(); }
+
+        // Theme
+        function toggleTheme() {
+            const html = document.documentElement;
+            const newTheme = (html.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('themeIcon').textContent = newTheme === 'dark' ? '🌙' : '☀️';
         }
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('show');
+
+        function loadTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('themeIcon').textContent = theme === 'dark' ? '🌙' : '☀️';
         }
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropdown-btn')) {
-                var dropdowns = document.getElementsByClassName("dropdown");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
+
+        // Drawer
+        function openDrawer() {
+            document.getElementById('columnDrawer').classList.add('open');
+            document.getElementById('drawerOverlay').classList.add('open');
+        }
+
+        function closeDrawer() {
+            document.getElementById('columnDrawer').classList.remove('open');
+            document.getElementById('drawerOverlay').classList.remove('open');
+        }
+
+        // CSV Export
+        function exportToCSV() {
+            const table = document.getElementById("machinesTable");
+            const rows = table.querySelectorAll("tr");
+            const visibleIndices = [];
+            visibleColumns.forEach((v, i) => { if (v) visibleIndices.push(i); });
+
+            const csvData = [];
+            const ths = rows[0].querySelectorAll("th");
+            const headers = [];
+            visibleIndices.forEach(i => { if (ths[i]) headers.push('"' + ths[i].innerText.replace(/[▲▼]/g, '').trim().replace(/"/g, '""') + '"'); });
+            csvData.push(headers.join(','));
+
+            for (let i = 1; i < rows.length; i++) {
+                if (rows[i].style.display === 'none') continue;
+                const tds = rows[i].querySelectorAll("td");
+                const rowData = [];
+                visibleIndices.forEach(idx => { if (tds[idx]) rowData.push('"' + tds[idx].innerText.replace(/\n/g, ' ').trim().replace(/"/g, '""') + '"'); });
+                csvData.push(rowData.join(','));
             }
+
+            const blob = new Blob(['\ufeff' + csvData.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'smartelia_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-        window.onload = function() {
+
+        window.onload = function () {
+            loadTheme();
             initOptions();
             updateColumns();
             renderTable();
+            document.getElementById('totalMachines').textContent = document.querySelectorAll('#machinesTable tbody tr').length;
         };
     </script>
 </head>
+
 <body>
-    <div class="container">
-    <h2>List of SMARTELIA machines</h2>
-        <div class="options-bar">
-            <div class="dropdown" id="dropdown">
-                <button class="dropdown-btn" type="button" onclick="toggleDropdown()">
-                    <span style="font-size:1.1em;">🗂️</span> Columns to display
-                </button>
-                <div class="dropdown-content">
-                    {% for col in columns %}
-                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> {{ col.replace('_', ' ').title() }}</label>
-                    {% endfor %}
-                    <label><input type="checkbox" class="col-checkbox" checked onchange="updateColumns();renderTable();"> Power Source</label>
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+    <!-- Column Drawer -->
+    <div class="column-drawer" id="columnDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">⚙️ Colonnes</span>
+            <div class="drawer-close" onclick="closeDrawer()">✕</div>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <div class="drawer-section-title">Afficher/Masquer</div>
+                {% for col in columns %}
+                <div class="column-item {{ 'active' if loop.index0 not in [1, 3] else '' }}"
+                    onclick="toggleColumn({{ loop.index0 }})">
+                    <input type="checkbox" {{ 'checked' if loop.index0 not in [1, 3] else '' }}>
+                    <div class="column-checkbox"></div>
+                    <span class="column-label">{{ col.replace('_', ' ').title() }}</span>
+                </div>
+                {% endfor %}
+                <div class="column-item active" onclick="toggleColumn({{ columns|length }})">
+                    <input type="checkbox" checked>
+                    <div class="column-checkbox"></div>
+                    <span class="column-label">Source Alimentation</span>
                 </div>
             </div>
-            <div>
-                <label for="rowsPerPage">Rows per page:</label>
-                <select id="rowsPerPage" onchange="updateRowsPerPage();">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50" selected>50</option>
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                </select>
+        </div>
+        <div class="drawer-actions">
+            <button class="btn btn-primary" onclick="selectAllColumns()">Tout</button>
+            <button class="btn"
+                style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color);"
+                onclick="deselectAllColumns()">Aucun</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">💻</div>
+                <h1>SMARTELIA</h1>
+            </div>
+
+            <div class="header-actions">
+                <div class="stat-badge">
+                    <span>📊</span>
+                    <strong id="totalMachines">0</strong>
+                    <span>machines</span>
+                </div>
+                <div class="icon-btn" onclick="toggleTheme()" title="Changer le thème">
+                    <span id="themeIcon">🌙</span>
+                </div>
             </div>
         </div>
-        <div class="search-bar">
-            <input type="text" id="globalSearch" onkeyup="globalSearch()" placeholder="Global search..." />
+    </header>
+
+    <!-- Main -->
+    <main class="main-container">
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="globalSearch" class="search-input" onkeyup="globalSearch()"
+                    placeholder="Rechercher..." />
+            </div>
+
+            <select id="rowsPerPage" onchange="updateRowsPerPage();">
+                <option value="25">25</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+
+            <button class="btn btn-primary" onclick="openDrawer()">
+                <span>⚙️</span> Colonnes
+            </button>
+
+            <button class="btn btn-success" onclick="exportToCSV()">
+                <span>📥</span> CSV
+            </button>
         </div>
-        <div class="table-responsive">
-            <table id="machinesTable">
-                <thead>
-                    <tr>
-                        {% for col in columns %}
-                        <th class="sortable" onclick="sortTable({{ loop.index0 }})">
-                            {{ col.replace('_', ' ').title() }}
-                            <span class="sort-indicator"></span>
-                        </th>
-                        {% endfor %}
-                        <th>Power Source</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% set sorted_data = data|sort(attribute=columns[0]) %}
-                    {% for entry in sorted_data %}
-                    <tr>
-                        {% for col in columns %}
-                        {# Conditional highlighting #}
-                        {% set val = entry.get(col, '') %}
-                        {% if col == 'disk_free' %}
-                            {% set disk_gb = disk_to_gb(val)|float %}
-                            <td class="{{ 'disk-low' if disk_gb < 50 else '' }}" data-sort-value="{{ '%.2f' % disk_gb }}">
-                                {{ val }}
-                            </td>
-                        {% elif col == 'battery_status' %}
-                            {% if val is mapping %}
-                                {% set percent = val.get('percent', None) %}
-                                    <td class="{{ 'battery-low' if percent is not none and percent < 35 else '' }}" data-sort-value="{{ percent if percent is not none else 0 }}">
-                                    Percent: {% if percent is not none %}{{ percent }} %{% else %}N/A{% endif %}
-                                </td>
+
+        <div class="table-container">
+            <div class="table-scroll">
+                <table id="machinesTable">
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                            <th onclick="sortTable({{ loop.index0 }})">{{ col.replace('_', ' ').title() }}<span
+                                    class="sort-indicator"></span></th>
+                            {% endfor %}
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in data|sort(attribute=columns[0]) %}
+                        {% set disk_gb = disk_to_gb(entry.get('disk_free', ''))|float %}
+                        {% set batt = entry.get('battery_status', {}) %}
+                        {% set bp = batt.get('percent', 0) if batt is mapping else 0 %}
+                        <tr
+                            class="{{ 'disk-low' if disk_gb < 30 else '' }} {{ 'battery-low' if bp is number and bp < 30 else '' }}">
+                            {% for col in columns %}
+                            {% set val = entry.get(col, '') %}
+                            {% if col == 'disk_free' %}
+                            {% set dg = disk_to_gb(val)|float %}
+                            <td data-sort-value="{{ '%.2f' % dg }}"><span
+                                    class="badge {{ 'badge-danger' if dg < 15 else 'badge-warning' if dg < 30 else 'badge-success' if dg < 100 else 'badge-info' }}">{{
+                                    val }}</span></td>
+                            {% elif col == 'battery_status' %}
+                            {% if val is mapping %}{% set p = val.get('percent', 0) %}<td data-sort-value="{{ p }}">
+                                <div class="battery-bar">
+                                    <div class="battery-progress">
+                                        <div class="battery-fill {{ 'high' if p >= 50 else 'medium' if p >= 20 else 'low' }}"
+                                            style="width:{{ p }}%"></div>
+                                    </div><span
+                                        class="badge {{ 'badge-success' if p >= 50 else 'badge-warning' if p >= 20 else 'badge-danger' }}">{{
+                                        p }}%</span>
+                                </div>
+                            </td>{% else %}<td data-sort-value="0"><span class="badge badge-info">N/A</span></td>{%
+                            endif %}
+                            {% elif col == 'battery_details' %}
+                            <td>{% set bs = entry.get('battery_status', {}) %}{% if bs is mapping and
+                                bs.get('time_left') %}<span style="color:var(--text-muted);font-size:0.8rem;">⏱️{{
+                                    bs.get('time_left') }}</span> {% endif %}{% if val is mapping %}{% set mc =
+                                val.get('max_capacity') %}{% if mc %}<span
+                                    class="badge {{ 'badge-danger' if mc < 80 else 'badge-warning' if mc < 90 else 'badge-success' }}">🔋{{
+                                    mc }}%</span>{% endif %}{% if val.get('cycle_count') %}<span
+                                    style="color:var(--text-muted);font-size:0.75rem;margin-left:4px;">{{
+                                    val.get('cycle_count') }}c</span>{% endif %}{% endif %}</td>
+                            {% elif col == 'current_user' %}
+                            <td><span class="user-avatar">{{ val[:1].upper() if val else '?' }}</span>{{ val }}</td>
+                            {% elif col == 'hostname' %}
+                            <td><span style="font-weight:600;color:var(--accent-blue);">{{ val }}</span></td>
                             {% else %}
-                                <td data-sort-value="0">Percent: N/A</td>
+                            <td>{% if val is mapping %}{% for k, v in val.items() %}{{ k }}:{{ v }} {% endfor %}{% else
+                                %}{{ val }}{% endif %}</td>
                             {% endif %}
-                        {% elif col == 'battery_details' %}
-                            <td>
-                                {# Include other info from battery_status here (except percent) #}
-                                {% set batt = entry.get('battery_status', {}) %}
-                                {% if batt is mapping %}
-                                    power_plugged: {{ batt.get('power_plugged') }}<br>
-                                    time_left: {{ batt.get('time_left') }}<br>
-                                    drawing_from: {{ batt.get('drawing_from') }}<br>
-                                {% endif %}
-                                {% set max_capacity = val.get('max_capacity', None) %}
-                                {% if max_capacity is not none %}
-                                    Max capacity : {{ max_capacity }} mAh<br>
-                                {% endif %}
-                                {% for k, v in val.items() %}
-                                    {% if k != 'max_capacity' %}{{ k }}: {{ v }}<br>{% endif %}
-                                {% endfor %}
-                            </td>
-                        {% elif col == 'charger_100_since' %}
-                            <td>
-                                {{ entry.get('charger_100_since') or '' }}
-                            </td>
-                        {% elif col == 'charger_100_duration' %}
-                            <td data-sort-value="{{ entry.get('charger_100_duration_seconds', 0) }}">
-                                {{ entry.get('charger_100_duration') or '' }}
-                            </td>
-                        {% else %}
-                            <td>
-                                {% if val is mapping %}
-                                    {% for k, v in val.items() %}{{ k }}: {{ v }}<br>{% endfor %}
-                                {% else %}
-                                    {{ val }}
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                            {% endfor %}
+                            <td>{% set b = entry.get('battery_status', {}) %}{% if b is mapping %}{% set s =
+                                b.get('drawing_from', '') %}{% if s == 'AC Power' %}<span
+                                    class="badge badge-success">🔌AC</span>{% elif s == 'Battery Power' %}<span
+                                    class="badge badge-warning">🔋</span>{% else %}<span
+                                    class="badge badge-info">❓</span>{% endif %}{% else %}<span
+                                    class="badge badge-info">❓</span>{% endif %}</td>
+                        </tr>
                         {% endfor %}
-                        {# Power source icon column #}
-                        <td class="power-icon">
-                            {% set batt = entry.get('battery_status', {}) %}
-                            {% if batt is mapping %}
-                                {% set source = batt.get('drawing_from', '') %}
-                                {% if source == 'AC Power' %}
-                                    <span title="On AC">🔌</span>
-                                {% elif source == 'Battery Power' %}
-                                    <span title="On Battery">🔋</span>
-                                {% else %}
-                                    <span title="Unknown">❓</span>
-                                {% endif %}
-                            {% else %}
-                                <span title="Unknown">❓</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <div class="pagination" id="pagination"></div>
+            </div>
         </div>
-        <div class="pagination" id="pagination"></div>
-    </div>
+    </main>
 </body>
-</html> 
+
+</html>
