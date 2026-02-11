@@ -162,7 +162,7 @@ def get_machines_html(request: Request):
     columns = [
         'ip', 'mac', 'hostname', 'model_info', 'macos_version', 'model_identifier',
         'taille', 'annee', 'disk_free', 'ram_info', 'open_apps',
-        'battery_status', 'battery_details', 'current_user', 'date_recuperation',
+        'battery_status', 'battery_details', 'current_user', 'uptime', 'date_recuperation',
         'charger_100_since', 'charger_100_duration'
     ]
     return templates.TemplateResponse(

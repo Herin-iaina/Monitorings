@@ -187,6 +187,22 @@ def try_ssh_connection(ip, username, password):
             'condition': condition
         }
         
+        # Récupération de l'uptime
+        uptime_raw = exec_with_timeout('uptime')
+        # print(f"DEBUG UPTIME RAW ({hostname}): {uptime_raw}") # Debug
+        uptime = "Unknown"
+        # Exemple output: "12:13  up 10 days, 2:30, 2 users, load averages: 1.45 1.56 1.50"
+        # Regex pour capturer ce qui est après "up " et avant le nombre de users
+        # On prend tout jusqu'au prochain virgule suivi de "user" ou la fin
+        uptime_match = re.search(r'up\s+(.*?)(,\s+\d+\s+user|\s+user)', uptime_raw)
+        if uptime_match:
+            uptime = uptime_match.group(1).strip()
+        else:
+            # Fallback si format court "up 1:30"
+            uptime_match = re.search(r'up\s+(.*?),', uptime_raw)
+            if uptime_match:
+                uptime = uptime_match.group(1).strip()
+        
         current_user = exec_with_timeout('stat -f%Su /dev/console')
         
         return {
@@ -196,6 +212,7 @@ def try_ssh_connection(ip, username, password):
             'disk_free': disk_free if disk_free else "Unknown",
             'ram_info': ram_info if ram_info else "Unknown",
             'open_apps': open_apps if open_apps else "Unknown",
+            'uptime': uptime,
             'battery_status': battery_status,
             'battery_details': battery_details,
             'current_user': current_user if current_user else "Unknown"
@@ -210,6 +227,7 @@ def try_ssh_connection(ip, username, password):
             'disk_free': "Unknown",
             'ram_info': "Unknown",
             'open_apps': "Unknown",
+            'uptime': "Unknown",
             'battery_status': {},
             'battery_details': {},
             'current_user': "Unknown"
@@ -315,6 +333,7 @@ def scan_ip(ip, ssh_credentials=None):
                 'disk_free': ssh_result.get('disk_free', 'Unknown'),
                 'ram_info': ssh_result.get('ram_info', 'Unknown'),
                 'open_apps': ssh_result.get('open_apps', 'Unknown'),
+                'uptime': ssh_result.get('uptime', 'Unknown'),
                 'battery_status': ssh_result.get('battery_status', {}),
                 'battery_details': ssh_result.get('battery_details', {}),
                 'current_user': current_user
@@ -329,7 +348,7 @@ def save_to_csv(results, filename):
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             fieldnames = [
                 'IP Address', 'MAC Address', 'Hostname', 'Model Info', 'macOS Version',
-                'Model Identifier', 'Taille', 'Annee', 'Disk Free', 'RAM Info', 'Open Apps',
+                'Model Identifier', 'Taille', 'Annee', 'Disk Free', 'RAM Info', 'Open Apps', 'Uptime',
                 'Battery Status', 'Battery Details', 'Current User'
             ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -358,6 +377,7 @@ def save_to_csv(results, filename):
                         'Disk Free': result.get('disk_free', 'Unknown'),
                         'RAM Info': result.get('ram_info', 'Unknown'),
                         'Open Apps': result.get('open_apps', 'Unknown'),
+                        'Uptime': result.get('uptime', 'Unknown'),
                         'Battery Status': battery_status_str,
                         'Battery Details': battery_details_str,
                         'Current User': result.get('current_user', 'Unknown')

@@ -995,6 +995,8 @@
                                     val.get('cycle_count') }}c</span>{% endif %}{% endif %}</td>
                             {% elif col == 'current_user' %}
                             <td><span class="user-avatar">{{ val[:1].upper() if val else '?' }}</span>{{ val }}</td>
+                            {% elif col == 'uptime' %}
+                            <td><span style="font-size:0.9rem;color:var(--text-muted);">⏱️{{ val }}</span></td>
                             {% elif col == 'hostname' %}
                             <td><span style="font-weight:600;color:var(--accent-blue);">{{ val }}</span></td>
                             {% else %}
