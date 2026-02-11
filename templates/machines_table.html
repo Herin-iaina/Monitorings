@@ -973,7 +973,7 @@
                                     class="badge {{ 'badge-danger' if dg < 15 else 'badge-warning' if dg < 30 else 'badge-success' if dg < 100 else 'badge-info' }}">{{
                                     val }}</span></td>
                             {% elif col == 'battery_status' %}
-                            {% if val is mapping %}{% set p = val.get('percent', 0) %}<td data-sort-value="{{ p }}">
+                            {% if val is mapping %}{% set p = val.get('percent') or 0 %}<td data-sort-value="{{ p }}">
                                 <div class="battery-bar">
                                     <div class="battery-progress">
                                         <div class="battery-fill {{ 'high' if p >= 50 else 'medium' if p >= 20 else 'low' }}"

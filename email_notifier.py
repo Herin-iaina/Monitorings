@@ -90,7 +90,7 @@ def prepare_email_data(machines):
         # Récupération des infos batterie
         battery_status = machine.get('battery_status', {})
         battery_percent = battery_status.get('percent', 'N/A')
-        drawing_from = battery_status.get('drawing_from', '')
+        drawing_from = battery_status.get('drawing_from') or ''
         
         # La machine est sur secteur si drawing_from contient "AC Power"
         is_on_ac_power = 'AC Power' in drawing_from

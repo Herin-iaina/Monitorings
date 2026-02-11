@@ -4,8 +4,13 @@ services:
     container_name: networkscan
     ports:
       - "8000:8000"
+    environment:
+      - TZ=Europe/Paris
     env_file:
       - .env
     volumes:
       - .:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    command: [ "python", "runner.py" ]
     restart: unless-stopped

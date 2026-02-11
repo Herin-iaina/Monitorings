@@ -11,8 +11,16 @@ import time
 import csv
 import os
 import json
+import logging
 from dotenv import load_dotenv
 import email_notifier
+
+# Configuration Logging
+logging.basicConfig(
+    filename='network_scanner.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 # Configuration SSH
 USE_SSH = True  # Mettre à False pour désactiver SSH
@@ -96,32 +104,37 @@ def get_mac_address(ip):
     return "Unknown"
 
 def try_ssh_connection(ip, username, password):
-    """Tente une connexion SSH et récupère les infos d'état de la machine"""
+    """Tente une connexion SSH et récupère les infos d'état de la machine avec timeouts et gestion des erreurs"""
+    ssh = None
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(ip, username=username, password=password, timeout=5)
-
-        stdin, stdout, stderr = ssh.exec_command('hostname')
-        hostname = stdout.read().decode().strip()
-
-        stdin, stdout, stderr = ssh.exec_command('system_profiler SPHardwareDataType | grep "Model Name\\|Model Identifier"')
-        model_info = stdout.read().decode().replace('\n', ' ').strip()
-
-        stdin, stdout, stderr = ssh.exec_command('sw_vers -productVersion')
-        macos_version = stdout.read().decode().strip()
         
-        stdin, stdout, stderr = ssh.exec_command('df -h / | awk \'NR==2 {print $4}\'')
-        disk_free = stdout.read().decode().strip()
+        # Ajout de timeouts explicites pour la connexion
+        ssh.connect(ip, username=username, password=password, timeout=5, banner_timeout=5, auth_timeout=5)
 
-        stdin, stdout, stderr = ssh.exec_command('top -l 1 | grep PhysMem | awk \'{print $2" used, "$6" free"}\'')
-        ram_info = stdout.read().decode().strip()
+        def exec_with_timeout(command, timeout=10):
+            try:
+                stdin, stdout, stderr = ssh.exec_command(command, timeout=timeout)
+                stdout.channel.settimeout(timeout)
+                # Ensure we read with a timeout
+                return stdout.read().decode().strip()
+            except Exception:
+                return ""
 
-        stdin, stdout, stderr = ssh.exec_command('osascript -e \'tell application "System Events" to get name of every process where background only is false\'')
-        open_apps = stdout.read().decode().strip()
+        hostname = exec_with_timeout('hostname')
+        
+        model_info = exec_with_timeout('system_profiler SPHardwareDataType | grep "Model Name\\|Model Identifier"').replace('\n', ' ').strip()
+        
+        macos_version = exec_with_timeout('sw_vers -productVersion')
+        
+        disk_free = exec_with_timeout('df -h / | awk \'NR==2 {print $4}\'')
 
-        stdin, stdout, stderr = ssh.exec_command('pmset -g batt')
-        battery_status_raw = stdout.read().decode().strip()
+        ram_info = exec_with_timeout('top -l 1 | grep PhysMem | awk \'{print $2" used, "$6" free"}\'')
+
+        open_apps = exec_with_timeout('osascript -e \'tell application "System Events" to get name of every process where background only is false\'')
+
+        battery_status_raw = exec_with_timeout('pmset -g batt')
         percent = None
         power_plugged = None
         time_left = None
@@ -145,8 +158,7 @@ def try_ssh_connection(ip, username, password):
             'drawing_from': drawing_from
         }
 
-        stdin, stdout, stderr = ssh.exec_command('system_profiler SPPowerDataType')
-        battery_profiler = stdout.read().decode()
+        battery_profiler = exec_with_timeout('system_profiler SPPowerDataType')
         cycle_count = None
         max_capacity = None
         condition = None
@@ -158,9 +170,9 @@ def try_ssh_connection(ip, username, password):
                     pass
             if 'Condition' in line:
                 condition = line.split(':')[-1].strip()
+        
         # Récupérer la capacité maximale avec la commande demandée
-        stdin, stdout, stderr = ssh.exec_command("system_profiler SPPowerDataType | awk -F': ' '/Maximum Capacity/ {gsub(/[^0-9]/, \"\", $2); print $2}'")
-        max_capacity_str = stdout.read().decode().strip()
+        max_capacity_str = exec_with_timeout("system_profiler SPPowerDataType | awk -F': ' '/Maximum Capacity/ {gsub(/[^0-9]/, \"\", $2); print $2}'")
         try:
             max_capacity = int(max_capacity_str) if max_capacity_str else None
         except:
@@ -171,22 +183,21 @@ def try_ssh_connection(ip, username, password):
             'condition': condition
         }
         
-        stdin, stdout, stderr = ssh.exec_command('stat -f%Su /dev/console')
-        current_user = stdout.read().decode().strip()
+        current_user = exec_with_timeout('stat -f%Su /dev/console')
         
-        ssh.close()
         return {
             'hostname': hostname if hostname else "Unknown",
             'model_info': model_info if model_info else "Unknown",
             'macos_version': macos_version if macos_version else "Unknown",
-            'disk_free': disk_free,
-            'ram_info': ram_info,
-            'open_apps': open_apps,
+            'disk_free': disk_free if disk_free else "Unknown",
+            'ram_info': ram_info if ram_info else "Unknown",
+            'open_apps': open_apps if open_apps else "Unknown",
             'battery_status': battery_status,
             'battery_details': battery_details,
             'current_user': current_user if current_user else "Unknown"
         }
-    except:
+    except Exception as e:
+        logging.error(f"Connection failed for {ip}: {e}")
         return {
             'hostname': "Unknown",
             'model_info': "Unknown",
@@ -198,6 +209,9 @@ def try_ssh_connection(ip, username, password):
             'battery_details': {},
             'current_user': "Unknown"
         }
+    finally:
+        if ssh:
+            ssh.close()
 
 def extract_model_identifier(model_info):
     match = re.search(r'(Mac(?:BookPro)?[0-9,]+|Mac[0-9,]+)', model_info)
@@ -356,14 +370,18 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
         with tqdm(total=len(ips_to_scan), desc="Scanning", unit="IP") as pbar:
             futures = {executor.submit(scan_ip, ip, ssh_credentials): ip for ip in ips_to_scan}
-            for future in concurrent.futures.as_completed(futures):
-                pbar.update(1)
-                try:
-                    result = future.result()
-                    if result and is_smartelia_machine(result.get('hostname', '')):
-                        results.append(result)
-                except:
-                    pass
+            try:
+                for future in concurrent.futures.as_completed(futures, timeout=600): # 10 minutes max scan time
+                    pbar.update(1)
+                    try:
+                        result = future.result()
+                        if result and is_smartelia_machine(result.get('hostname', '')):
+                            results.append(result)
+                    except:
+                        pass
+            except concurrent.futures.TimeoutError:
+                print("\nScan global timeout reached. Stopping remaining tasks.")
+                executor.shutdown(wait=False, cancel_futures=True)
 
     if results:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
