@@ -132,7 +132,11 @@ def try_ssh_connection(ip, username, password):
 
         ram_info = exec_with_timeout('top -l 1 | grep PhysMem | awk \'{print $2" used, "$6" free"}\'')
 
-        open_apps = exec_with_timeout('osascript -e \'tell application "System Events" to get name of every process where background only is false\'')
+        # Récupération la liste brute
+        open_apps_raw = exec_with_timeout("ps -eo comm | grep '.app/Contents/MacOS/' | grep -oE '[^/]+\.app' | sed 's/\.app//g' | sort -u | tr '\\n' ', ' | sed 's/, $//'")
+        
+        # Filtrage et regroupement
+        open_apps = filter_open_apps(open_apps_raw)
 
         battery_status_raw = exec_with_timeout('pmset -g batt')
         percent = None
@@ -198,6 +202,7 @@ def try_ssh_connection(ip, username, password):
         }
     except Exception as e:
         logging.error(f"Connection failed for {ip}: {e}")
+        # print(f"Connection failed for {ip}: {e}") # Debug only
         return {
             'hostname': "Unknown",
             'model_info': "Unknown",
@@ -211,7 +216,62 @@ def try_ssh_connection(ip, username, password):
         }
     finally:
         if ssh:
-            ssh.close()
+            try:
+                ssh.close()
+            except:
+                pass
+
+def filter_open_apps(app_string):
+    """
+    Nettoie et regroupe la liste des applications.
+    - Supprime les processus système/agents
+    - Regroupe les "Helper" (ex: Google Chrome Helper -> Google Chrome)
+    """
+    if not app_string or app_string == "Unknown":
+        return "Unknown"
+
+    # Liste des processus à ignorer (agents système, daemons, etc.)
+    ignore_list = {
+        'ARDAgent', 'AgentAntidote', 'AgentAntidoteConnect', 'AirPlayUIAgent', 
+        'AppSSOAgent', 'BackgroundTaskManagementAgent', 'Connectix 10', 'ControlCenter', 
+        'CoreLocationAgent', 'CoreServicesUIAgent', 'Dock', 'EscrowSecurityAlert', 'IMAutomaticHistoryDeletionAgent', 'Keychain Circle Notification', 
+        'NotificationCenter', 'OSDUIHelper', 'SSMenuAgent', 'Siri', 
+        'SoftwareUpdateNotificationManager', 'Spotlight', 'SystemUIServer', 
+        'TextInputMenuAgent', 'TextInputSwitcher', 'UIKitSystem', 'WallpaperAgent', 
+        'WiFiAgent', 'WindowManager', 'XProtect', 'identityservicesd', 'imagent', 
+        'loginwindow', 'sociallayerd', 'universalAccessAuthWarn', 'UserEventAgent', 
+        'distnoted', 'cfprefsd', 'xpcproxy', 'tccd', 'cloudphotosd','UserNotificationCenter','AccessibilityUIServer', 'PowerChime','AccessibilityVisualsAgent','ControlStrip', 'Stocks', 'NowPlayingTouchUI','ChromeEnterpriseCompanion','ChromeRemoteDesktopHost','osquery','nbagent','AdobeResourceSynchronizer', 'OneDrive Sync Service', 'SafariAdapter','AuthManager_Mac', 'LinkedNotesUIService', 'IMTransferAgent','EndpointSecurityforMac', 'BDLDaemon', 'HideMyAssVPN', 'privatecloudcomputed','EasyInteractiveDriver', 'gpu-helper, plugin-container','USBserver', 'CtxWorkspaceHelperDaemon', 'CEPHtmlEngine','Preview', 'Bluetooth File Exchange','ServiceRecords','QuickLookUIHelper','rcd','AquaAppearanceHelper', 'storeuid','AXVisualSupportAgent', 'AdobeIPCBroker', 'EvernoteHelper', 'LOGINserver', 'AppleSpell', 'NETserver', 'USBAppControl', 'WorkflowAppControl', 'gpu-helper', 'plugin-container', 'screencaptureui', 'HMA VPN Action', 'HMA VPN Status',' Adobe Crash Processor', 'CCLibrary', 'CCXProcess', 'Android File Transfer Agent',''
+    }
+
+    apps = [a.strip() for a in app_string.split(',') if a.strip()]
+    cleaned_apps = set()
+
+    for app in apps:
+        # Ignorer les processus système
+        if app in ignore_list:
+            continue
+        
+        # Nettoyage et regroupement
+        # Ex: "Google Chrome Helper (GPU)" -> "Google Chrome"
+        # Ex: "Antigravity Helper" -> "Antigravity"
+        
+        # Règle générique pour les "Helper", "Agent", "Service" si c'est un sous-processus évident
+        base_name = app
+        
+        # Cas spécifiques et patterns
+        if "Google Chrome" in app:
+            base_name = "Google Chrome"
+        elif "Antigravity" in app:
+            base_name = "Antigravity"
+        elif "Helper" in app:
+             # Tente de garder le nom avant "Helper"
+             # "Spotify Helper" -> "Spotify"
+             base_name = app.split(' Helper')[0]
+        
+        cleaned_apps.add(base_name)
+
+    # Convertir en liste triée et joindre
+    return ", ".join(sorted(cleaned_apps))
 
 def extract_model_identifier(model_info):
     match = re.search(r'(Mac(?:BookPro)?[0-9,]+|Mac[0-9,]+)', model_info)
