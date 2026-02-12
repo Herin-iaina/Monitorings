@@ -507,6 +507,10 @@
             background: #EA4335;
         }
 
+        .btn-deploy {
+            background: #34A853;
+        }
+
         .action-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             filter: brightness(1.1);
@@ -624,6 +628,198 @@
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
+        }
+
+        /* Deploy Tracker Widget (non-blocking) */
+        .deploy-tracker {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 340px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1500;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .deploy-tracker.visible {
+            display: flex;
+            animation: trackerSlideUp 0.3s ease;
+        }
+
+        @keyframes trackerSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .deploy-tracker.minimized .deploy-tracker-body,
+        .deploy-tracker.minimized .deploy-progress-bar {
+            display: none;
+        }
+
+        .deploy-tracker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #34A853, #2d9348);
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .deploy-tracker-header.done {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .deploy-tracker-header.has-errors {
+            background: linear-gradient(135deg, var(--accent-orange), #d97706);
+        }
+
+        .deploy-tracker-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .deploy-tracker-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .deploy-tracker-btn {
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deploy-tracker-btn:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .deploy-progress-bar {
+            flex-shrink: 0;
+        }
+
+        .deploy-progress-track {
+            height: 3px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .deploy-progress-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.5);
+            transition: width 0.4s ease;
+        }
+
+        .deploy-tracker-body {
+            overflow-y: auto;
+            max-height: 280px;
+            padding: 6px 8px;
+        }
+
+        .deploy-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 10px;
+            border-radius: 6px;
+            margin-bottom: 3px;
+            font-size: 0.8rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .deploy-item-info {
+            overflow: hidden;
+        }
+
+        .deploy-item-host {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .deploy-item-ip {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .deploy-item-msg {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        /* Deploy Popover */
+        .deploy-popover {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 16px;
+            z-index: 1100;
+            width: 320px;
+            animation: trackerSlideUp 0.2s ease;
+        }
+
+        .deploy-popover.visible {
+            display: block;
+        }
+
+        .deploy-popover-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .deploy-popover-item {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 4px 0;
+        }
+
+        .deploy-ext {
+            font-weight: 600;
+            color: var(--accent-blue);
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .deploy-popover-btn {
+            width: 100%;
+            justify-content: center;
+            margin-top: 12px;
         }
 
         .select-checkbox {
@@ -1254,6 +1450,23 @@
         <button class="action-btn btn-shutdown" onclick="performAction('/actions/shutdown', true)">
             🛑 Shutdown
         </button>
+        <button class="action-btn btn-deploy" onclick="showDeployPopover()">
+            📦 Deploy
+        </button>
+        <input type="file" id="deployFileInput" accept=".pkg,.dmg,.zip,.sh,.mobileconfig" style="display:none" onchange="deployFile(this)">
+    </div>
+
+    <!-- Deploy Info Popover -->
+    <div class="deploy-popover" id="deployPopover">
+        <div class="deploy-popover-title">Formats supportes</div>
+        <div class="deploy-popover-item"><span class="deploy-ext">.pkg</span> Installeur macOS</div>
+        <div class="deploy-popover-item"><span class="deploy-ext">.dmg</span> Image disque (PKG/APP)</div>
+        <div class="deploy-popover-item"><span class="deploy-ext">.zip</span> Archive (APP)</div>
+        <div class="deploy-popover-item"><span class="deploy-ext">.sh</span> Script shell</div>
+        <div class="deploy-popover-item"><span class="deploy-ext">.mobileconfig</span> Profil de configuration</div>
+        <button class="btn btn-success deploy-popover-btn" onclick="openDeployFilePicker()">
+            📂 Choisir un fichier
+        </button>
     </div>
 
     <!-- Results Modal -->
@@ -1271,6 +1484,27 @@
             </div>
         </div>
     </div>
+
+    <!-- Deploy Tracker Widget (non-blocking) -->
+    <div class="deploy-tracker" id="deployTracker">
+        <div class="deploy-tracker-header" id="deployTrackerHeader" onclick="toggleDeployMinimize()">
+            <span class="deploy-tracker-title">
+                <span id="deployTrackerIcon">📦</span>
+                <span id="deployTrackerTitle">Deploy en cours...</span>
+            </span>
+            <div class="deploy-tracker-actions" onclick="event.stopPropagation()">
+                <button class="deploy-tracker-btn" onclick="toggleDeployMinimize()" title="Reduire/Agrandir">—</button>
+                <button class="deploy-tracker-btn" id="deployCloseBtn" onclick="closeDeployTracker()" title="Fermer" style="display:none">✕</button>
+            </div>
+        </div>
+        <div class="deploy-progress-bar">
+            <div class="deploy-progress-track">
+                <div class="deploy-progress-fill" id="deployProgressFill" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="deploy-tracker-body" id="deployTrackerBody"></div>
+    </div>
+
     <script>
         // Selection & Action Bar Logic
         function toggleSelectAll() {
@@ -1402,6 +1636,148 @@
             document.getElementById('modalCloseBtn').disabled = false;
 
             // Clear selection
+            document.getElementById('selectAll').checked = false;
+            toggleSelectAll();
+        }
+
+        // Deploy Popover
+        function showDeployPopover() {
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Aucune machine selectionnee.');
+                return;
+            }
+            document.getElementById('deployPopover').classList.add('visible');
+        }
+
+        function closeDeployPopover() {
+            document.getElementById('deployPopover').classList.remove('visible');
+        }
+
+        function openDeployFilePicker() {
+            closeDeployPopover();
+            document.getElementById('deployFileInput').click();
+        }
+
+        document.addEventListener('click', function(e) {
+            const popover = document.getElementById('deployPopover');
+            if (!popover || !popover.classList.contains('visible')) return;
+            const deployBtn = document.querySelector('.btn-deploy');
+            if (!popover.contains(e.target) && e.target !== deployBtn && !deployBtn.contains(e.target)) {
+                closeDeployPopover();
+            }
+        });
+
+        // Deploy Tracker Widget
+        function toggleDeployMinimize() {
+            document.getElementById('deployTracker').classList.toggle('minimized');
+        }
+
+        function closeDeployTracker() {
+            const tracker = document.getElementById('deployTracker');
+            tracker.classList.remove('visible', 'minimized');
+        }
+
+        function updateDeployItem(ip, status, message) {
+            const item = document.getElementById(`deploy-${ip.replace(/\./g, '-')}`);
+            if (!item) return;
+            const indicator = item.querySelector('.status-indicator');
+            indicator.className = `status-indicator status-${status}`;
+            const labels = { pending: 'En attente', running: 'En cours...', success: 'OK', error: 'Erreur' };
+            indicator.textContent = labels[status] || status;
+            const msgEl = item.querySelector('.deploy-item-msg');
+            if (msgEl) msgEl.textContent = message || '';
+        }
+
+        function updateDeployProgress(done, total) {
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            document.getElementById('deployProgressFill').style.width = pct + '%';
+        }
+
+        // Deploy File (non-blocking tracker)
+        async function deployFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            const selectedMachines = Array.from(checkboxes).map(cb => ({
+                ip: cb.value, hostname: cb.dataset.hostname || 'Unknown'
+            }));
+
+            if (selectedMachines.length === 0) {
+                alert('Aucune machine selectionnee.');
+                input.value = '';
+                return;
+            }
+
+            const msg = `Deployer "${file.name}" sur ${selectedMachines.length} machine(s) ?\n\nLe fichier sera copie via SFTP, installe automatiquement puis supprime.`;
+            if (!confirm(msg)) {
+                input.value = '';
+                return;
+            }
+
+            // Setup Tracker Widget
+            const tracker = document.getElementById('deployTracker');
+            const body = document.getElementById('deployTrackerBody');
+            const header = document.getElementById('deployTrackerHeader');
+            body.innerHTML = '';
+            header.className = 'deploy-tracker-header';
+            document.getElementById('deployTrackerIcon').textContent = '📦';
+            document.getElementById('deployTrackerTitle').textContent = file.name;
+            document.getElementById('deployProgressFill').style.width = '0%';
+            document.getElementById('deployCloseBtn').style.display = 'none';
+            tracker.classList.remove('minimized');
+            tracker.classList.add('visible');
+
+            selectedMachines.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'deploy-item';
+                div.id = `deploy-${m.ip.replace(/\./g, '-')}`;
+                div.innerHTML = `
+                    <div class="deploy-item-info">
+                        <div class="deploy-item-host">${m.hostname}</div>
+                        <div class="deploy-item-ip">${m.ip}</div>
+                        <div class="deploy-item-msg"></div>
+                    </div>
+                    <span class="status-indicator status-pending">En attente</span>
+                `;
+                body.appendChild(div);
+            });
+
+            // Deploy machine by machine
+            let done = 0;
+            let errors = 0;
+            for (const machine of selectedMachines) {
+                updateDeployItem(machine.ip, 'running');
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('ips', JSON.stringify([machine.ip]));
+                    const response = await fetch('/actions/deploy', { method: 'POST', body: formData });
+                    const result = await response.json();
+                    const machineResult = result[machine.ip];
+                    if (machineResult && machineResult.success) {
+                        updateDeployItem(machine.ip, 'success', machineResult.output || 'Installe');
+                    } else {
+                        errors++;
+                        updateDeployItem(machine.ip, 'error', machineResult ? machineResult.error : 'Erreur inconnue');
+                    }
+                } catch (error) {
+                    errors++;
+                    updateDeployItem(machine.ip, 'error', 'Erreur reseau');
+                }
+                done++;
+                updateDeployProgress(done, selectedMachines.length);
+            }
+
+            // Completed
+            document.getElementById('deployTrackerTitle').textContent = `${file.name} — Termine`;
+            document.getElementById('deployTrackerIcon').textContent = errors > 0 ? '⚠️' : '✅';
+            header.classList.add(errors > 0 ? 'has-errors' : 'done');
+            document.getElementById('deployCloseBtn').style.display = '';
+
+            // Reset file input & selection
+            input.value = '';
             document.getElementById('selectAll').checked = false;
             toggleSelectAll();
         }

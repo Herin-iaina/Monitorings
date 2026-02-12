@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 import glob
 import json
@@ -307,6 +307,117 @@ def start_scan():
 def get_scan_status():
     """Retourne l'état actuel du scan."""
     return scan_state
+
+def deploy_to_machine(ip, local_path, filename):
+    """Copie un fichier via SFTP puis l'installe automatiquement selon son type."""
+    ssh = None
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, username=SSH_USERNAME, password=SSH_PASSWORD, timeout=10)
+
+        # 1. Copie SFTP vers /tmp/
+        remote_path = f"/tmp/{filename}"
+        sftp = ssh.open_sftp()
+        sftp.put(local_path, remote_path)
+        sftp.close()
+
+        # 2. Detecter le type et construire la commande d'installation
+        lower = filename.lower()
+        if lower.endswith('.pkg'):
+            install_cmd = f'sudo -S installer -pkg "{remote_path}" -target / 2>&1; rm -f "{remote_path}"'
+        elif lower.endswith('.dmg'):
+            install_cmd = (
+                f'MOUNT_DIR=$(hdiutil attach "{remote_path}" -nobrowse -noverify 2>&1 | tail -1 | cut -f3); '
+                f'if [ -n "$MOUNT_DIR" ]; then '
+                f'  PKG=$(find "$MOUNT_DIR" -maxdepth 2 -name "*.pkg" | head -1); '
+                f'  if [ -n "$PKG" ]; then '
+                f'    sudo -S installer -pkg "$PKG" -target / 2>&1; '
+                f'  else '
+                f'    APP=$(find "$MOUNT_DIR" -maxdepth 2 -name "*.app" | head -1); '
+                f'    if [ -n "$APP" ]; then '
+                f'      APP_NAME=$(basename "$APP"); '
+                f'      pkill -f "$APP_NAME" 2>/dev/null; sleep 1; '
+                f'      sudo -S rsync -a "$APP" /Applications/ 2>&1; '
+                f'      sudo -S xattr -rd com.apple.quarantine "/Applications/$APP_NAME" 2>/dev/null; '
+                f'    else '
+                f'      echo "Aucun .pkg ou .app trouve dans le DMG"; '
+                f'    fi; '
+                f'  fi; '
+                f'  hdiutil detach "$MOUNT_DIR" -quiet 2>&1; '
+                f'fi; '
+                f'rm -f "{remote_path}"'
+            )
+        elif lower.endswith('.zip'):
+            install_cmd = (
+                f'unzip -o "{remote_path}" -d /tmp/_deploy_unzip 2>&1; '
+                f'APP=$(find /tmp/_deploy_unzip -maxdepth 2 -name "*.app" | head -1); '
+                f'if [ -n "$APP" ]; then '
+                f'  APP_NAME=$(basename "$APP"); '
+                f'  pkill -f "$APP_NAME" 2>/dev/null; sleep 1; '
+                f'  sudo -S rsync -a "$APP" /Applications/ 2>&1; '
+                f'  sudo -S xattr -rd com.apple.quarantine "/Applications/$APP_NAME" 2>/dev/null; '
+                f'else '
+                f'  echo "Aucun .app trouve dans le ZIP"; '
+                f'fi; '
+                f'rm -rf /tmp/_deploy_unzip "{remote_path}"'
+            )
+        elif lower.endswith('.mobileconfig'):
+            install_cmd = f'sudo -S profiles install -path "{remote_path}" 2>&1; rm -f "{remote_path}"'
+        elif lower.endswith('.sh'):
+            install_cmd = f'sudo -S bash "{remote_path}" 2>&1; rm -f "{remote_path}"'
+        else:
+            install_cmd = f'echo "Type de fichier non supporte: {filename}"; rm -f "{remote_path}"'
+
+        # 3. Executer la commande d'installation
+        stdin, stdout, stderr = ssh.exec_command(install_cmd, timeout=120)
+        if SSH_PASSWORD:
+            stdin.write(SSH_PASSWORD + '\n')
+            stdin.flush()
+        output = stdout.read().decode().strip()
+        error = stderr.read().decode().strip()
+        return {"success": True, "output": output, "error": error}
+    except Exception as e:
+        return {"success": False, "output": "", "error": str(e)}
+    finally:
+        if ssh:
+            try:
+                ssh.close()
+            except:
+                pass
+
+@app.post("/actions/deploy")
+async def deploy_file(file: UploadFile = File(...), ips: str = Form(...)):
+    """Upload un fichier et le deploie sur les machines cibles."""
+    import shutil
+    import tempfile
+
+    # Parser la liste d'IPs
+    try:
+        ip_list = json.loads(ips)
+    except Exception:
+        return JSONResponse(status_code=400, content={"error": "Format IPs invalide"})
+
+    if not ip_list:
+        return JSONResponse(status_code=400, content={"error": "Aucune IP cible"})
+
+    # Sauvegarder le fichier temporairement sur le serveur
+    os.makedirs("uploads", exist_ok=True)
+    local_path = os.path.join("uploads", file.filename)
+    try:
+        with open(local_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        # Deployer sur chaque machine
+        results = {}
+        for ip in ip_list:
+            results[ip] = deploy_to_machine(ip, local_path, file.filename)
+    finally:
+        # Nettoyer le fichier local
+        if os.path.exists(local_path):
+            os.remove(local_path)
+
+    return results
 
 @app.get("/machines", response_class=JSONResponse)
 def get_machines():
