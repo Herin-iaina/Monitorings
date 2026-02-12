@@ -243,6 +243,36 @@
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 
+        .btn-scan {
+            background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+            color: white;
+        }
+
+        .btn-scan:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-scan:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-scan .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         select {
             padding: 8px 12px;
             background: var(--bg-secondary);
@@ -1121,6 +1151,10 @@
             <button class="btn btn-success" onclick="exportToCSV()">
                 <span>📥</span> CSV
             </button>
+
+            <button class="btn btn-scan" id="scanBtn" onclick="startScan()">
+                <span id="scanIcon">📡</span> <span id="scanLabel">Scan</span>
+            </button>
         </div>
 
         <div class="table-container">
@@ -1371,6 +1405,87 @@
             document.getElementById('selectAll').checked = false;
             toggleSelectAll();
         }
+
+        // Network Scan
+        let scanPollInterval = null;
+
+        async function startScan() {
+            const btn = document.getElementById('scanBtn');
+            const icon = document.getElementById('scanIcon');
+            const label = document.getElementById('scanLabel');
+
+            try {
+                const response = await fetch('/actions/scan', { method: 'POST' });
+                const result = await response.json();
+
+                if (result.status === 'already_running') {
+                    alert('Un scan est deja en cours, veuillez patienter.');
+                    setScanningState(true);
+                    pollScanStatus();
+                    return;
+                }
+
+                if (result.status === 'started') {
+                    setScanningState(true);
+                    pollScanStatus();
+                }
+            } catch (error) {
+                alert('Erreur lors du lancement du scan: ' + error.message);
+            }
+        }
+
+        function setScanningState(scanning) {
+            const btn = document.getElementById('scanBtn');
+            const icon = document.getElementById('scanIcon');
+            const label = document.getElementById('scanLabel');
+
+            if (scanning) {
+                btn.disabled = true;
+                icon.innerHTML = '<span class="spinner"></span>';
+                label.textContent = 'Scan en cours...';
+            } else {
+                btn.disabled = false;
+                icon.innerHTML = '📡';
+                label.textContent = 'Scan';
+            }
+        }
+
+        function pollScanStatus() {
+            if (scanPollInterval) clearInterval(scanPollInterval);
+
+            scanPollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/actions/scan/status');
+                    const state = await response.json();
+
+                    if (state.status === 'completed') {
+                        clearInterval(scanPollInterval);
+                        scanPollInterval = null;
+                        setScanningState(false);
+                        location.reload();
+                    } else if (state.status === 'error') {
+                        clearInterval(scanPollInterval);
+                        scanPollInterval = null;
+                        setScanningState(false);
+                        alert('Erreur durant le scan: ' + (state.error || 'Erreur inconnue'));
+                    }
+                } catch (e) {
+                    // Erreur réseau, on continue le polling
+                }
+            }, 3000);
+        }
+
+        // Au chargement, vérifier si un scan est en cours
+        (async function checkInitialScanState() {
+            try {
+                const response = await fetch('/actions/scan/status');
+                const state = await response.json();
+                if (state.status === 'running') {
+                    setScanningState(true);
+                    pollScanStatus();
+                }
+            } catch (e) {}
+        })();
     </script>
 </body>
 

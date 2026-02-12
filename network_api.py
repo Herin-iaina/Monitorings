@@ -8,9 +8,15 @@ from typing import List, Dict
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 import re
+import threading
+import network_scanner
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+# Scan state management
+scan_state = {"status": "idle", "started_at": None, "machines_found": 0, "error": None}
+scan_lock = threading.Lock()
 
 # Fonction utilitaire pour charger et fusionner les données sans doublons
 
@@ -251,6 +257,56 @@ def shutdown_machine(request: ActionRequest):
     for ip in request.ips:
         results[ip] = execute_ssh_command(ip, command)
     return results
+
+def _cleanup_json(max_files=5):
+    """Supprime les fichiers JSON les plus anciens si leur nombre dépasse la limite."""
+    files = glob.glob("smartelia_machines_*.json")
+    if len(files) <= max_files:
+        return
+    files_sorted = sorted(files, key=lambda f: os.path.getmtime(f))
+    while len(files_sorted) > max_files:
+        to_remove = files_sorted.pop(0)
+        try:
+            os.remove(to_remove)
+        except Exception:
+            pass
+
+def _run_scan():
+    """Exécute le scan réseau en arrière-plan et met à jour scan_state."""
+    global scan_state
+    try:
+        scan_state["status"] = "running"
+        scan_state["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        scan_state["machines_found"] = 0
+        scan_state["error"] = None
+        _cleanup_json()
+        network_scanner.main()
+        # Compter les machines du dernier fichier JSON généré
+        files = sorted(glob.glob("smartelia_machines_*.json"), key=os.path.getmtime)
+        if files:
+            with open(files[-1], 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                scan_state["machines_found"] = len(data)
+        scan_state["status"] = "completed"
+    except Exception as e:
+        scan_state["status"] = "error"
+        scan_state["error"] = str(e)
+
+@app.post("/actions/scan")
+def start_scan():
+    """Lance un scan réseau en arrière-plan."""
+    with scan_lock:
+        if scan_state["status"] == "running":
+            return {"status": "already_running", "started_at": scan_state["started_at"]}
+        scan_state["status"] = "running"
+    thread = threading.Thread(target=_run_scan, daemon=True)
+    thread.start()
+    return {"status": "started"}
+
+@app.get("/actions/scan/status")
+def get_scan_status():
+    """Retourne l'état actuel du scan."""
+    return scan_state
 
 @app.get("/machines", response_class=JSONResponse)
 def get_machines():
