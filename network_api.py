@@ -147,6 +147,111 @@ def load_and_merge_json_files() -> List[Dict]:
 
     return list(latest_data.values())
 
+# SSH Configuration from environment
+from dotenv import load_dotenv
+load_dotenv()
+SSH_USERNAME = os.getenv("SSH_USERNAME")
+SSH_PASSWORD = os.getenv("SSH_PASSWORD")
+import paramiko
+
+def execute_ssh_command(ip, command):
+    """Exécute une commande SSH sur une machine distante."""
+    ssh = None
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, username=SSH_USERNAME, password=SSH_PASSWORD, timeout=5)
+        stdin, stdout, stderr = ssh.exec_command(command, timeout=20)
+        # Injection du mot de passe pour sudo -S
+        if SSH_PASSWORD:
+             stdin.write(SSH_PASSWORD + '\n')
+             stdin.flush()
+        
+        output = stdout.read().decode().strip()
+        error = stderr.read().decode().strip()
+        return {"success": True, "output": output, "error": error}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+    finally:
+        if ssh:
+            try:
+                ssh.close()
+            except:
+                pass
+
+from pydantic import BaseModel
+
+class ActionRequest(BaseModel):
+    ips: List[str]
+
+@app.post("/actions/chrome-cleanup")
+def chrome_cleanup(request: ActionRequest):
+    """Ferme Chrome et nettoie les caches/cookies/historique pour l'utilisateur actuellement connecté."""
+    # Requiert Full Disk Access pour sshd sur les machines cibles :
+    # Préférences Système > Confidentialité > Accès complet au disque > ajouter /usr/sbin/sshd
+    import base64
+    script = """#!/bin/bash
+GUI_USER=$(stat -f%Su /dev/console)
+echo "Utilisateur cible : $GUI_USER"
+if [ -z "$GUI_USER" ] || [ "$GUI_USER" = "root" ]; then
+    echo "ERREUR: Aucun utilisateur GUI detecte"
+    exit 1
+fi
+
+CHROME_DIR="/Users/$GUI_USER/Library/Application Support/Google/Chrome"
+CACHE_DIR="/Users/$GUI_USER/Library/Caches/Google/Chrome"
+
+# Fermer TOUS les processus Chrome (main + helpers GPU/Renderer)
+pkill -f "Google Chrome" 2>/dev/null
+sleep 2
+pkill -9 -f "Google Chrome" 2>/dev/null
+sleep 1
+
+# Verifier que Chrome est bien arrete
+if pgrep -f "Google Chrome" > /dev/null 2>&1; then
+    echo "ATTENTION: Des processus Chrome sont encore actifs"
+    pgrep -fl "Google Chrome"
+fi
+
+# Supprimer le cache
+if [ -d "$CACHE_DIR" ]; then
+    rm -rf "$CACHE_DIR" && echo "Cache supprime: $CACHE_DIR" || echo "ECHEC suppression cache: $CACHE_DIR"
+else
+    echo "Cache introuvable: $CACHE_DIR"
+fi
+
+# Supprimer cookies et historique
+for f in Cookies Cookies-journal History History-journal; do
+    find "$CHROME_DIR" -maxdepth 3 -name "$f" -delete -print 2>&1
+done
+
+echo "Nettoyage termine pour $GUI_USER"
+"""
+    encoded = base64.b64encode(script.encode()).decode()
+    command = f"echo {encoded} | base64 -D > /tmp/_chrome_cleanup.sh && sudo -S bash /tmp/_chrome_cleanup.sh; rm -f /tmp/_chrome_cleanup.sh"
+    results = {}
+    for ip in request.ips:
+        results[ip] = execute_ssh_command(ip, command)
+    return results
+
+@app.post("/actions/restart")
+def restart_machine(request: ActionRequest):
+    """Redémarre la machine via sudo shutdown -r now."""
+    command = "sudo -S shutdown -r now"
+    results = {}
+    for ip in request.ips:
+        results[ip] = execute_ssh_command(ip, command)
+    return results
+
+@app.post("/actions/shutdown")
+def shutdown_machine(request: ActionRequest):
+    """Éteint la machine via sudo shutdown -h now."""
+    command = "sudo -S shutdown -h now"
+    results = {}
+    for ip in request.ips:
+        results[ip] = execute_ssh_command(ip, command)
+    return results
+
 @app.get("/machines", response_class=JSONResponse)
 def get_machines():
     """Retourne la liste fusionnée des machines sans doublons."""

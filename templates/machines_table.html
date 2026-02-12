@@ -427,6 +427,182 @@
             overflow: auto;
         }
 
+        /* Action Bar Styles - Premium & Practical */
+        .action-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            padding: 0.8rem 1.6rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+        }
+
+        .action-bar.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .btn-chrome {
+            background: #4285F4;
+        }
+
+        .btn-restart {
+            background: #FBBC05;
+            color: #000;
+        }
+
+        .btn-shutdown {
+            background: #EA4335;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .action-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .selected-count {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-right: 0.5rem;
+            padding-right: 1rem;
+            border-right: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        /* Results Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            width: 95%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .status-running {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .select-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+        }
+
         .table-scroll::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -660,7 +836,7 @@
         let visibleColumns = [];
         let sortCol = 0;
         let sortDir = 1;
-        const defaultHiddenColumns = [1, 3]; // MAC, Model Info
+        const defaultHiddenColumns = [1,3, 5]; // MAC, Model Info
 
         function initOptions() {
             const items = document.querySelectorAll('.column-item');
@@ -693,8 +869,9 @@
             const trs = table.getElementsByTagName("tr");
             for (let i = 0; i < trs.length; i++) {
                 const tds = trs[i].children;
-                for (let j = 0; j < tds.length; j++) {
-                    tds[j].style.display = visibleColumns[j] ? '' : 'none';
+                // Skip first column (checkbox), offset visibleColumns by 1
+                for (let j = 1; j < tds.length; j++) {
+                    tds[j].style.display = visibleColumns[j - 1] ? '' : 'none';
                 }
             }
         }
@@ -737,8 +914,8 @@
             const tr = Array.from(table.getElementsByTagName("tr")).slice(1);
 
             tr.sort((a, b) => {
-                const aCell = a.children[sortCol];
-                const bCell = b.children[sortCol];
+                const aCell = a.children[sortCol + 1];
+                const bCell = b.children[sortCol + 1];
                 const aData = aCell?.dataset?.sortValue;
                 const bData = bCell?.dataset?.sortValue;
                 if (aData !== undefined && bData !== undefined) {
@@ -759,7 +936,7 @@
             for (let i = 0; i < tr.length; i++) {
                 let showRow = false;
                 const tds = tr[i].getElementsByTagName("td");
-                for (let j = 0; j < tds.length; j++) {
+                for (let j = 1; j < tds.length; j++) {
                     if (tds[j].style.display !== 'none' && tds[j].textContent.toUpperCase().indexOf(input) > -1) {
                         showRow = true; break;
                     }
@@ -790,7 +967,7 @@
                 const indicator = ths[i].querySelector('.sort-indicator');
                 ths[i].classList.remove('sorted');
                 if (indicator) {
-                    if (i === sortCol) { indicator.innerHTML = sortDir === 1 ? '▲' : '▼'; ths[i].classList.add('sorted'); }
+                    if (i === sortCol + 1) { indicator.innerHTML = sortDir === 1 ? '▲' : '▼'; ths[i].classList.add('sorted'); }
                     else { indicator.innerHTML = ''; }
                 }
             }
@@ -834,14 +1011,14 @@
             const csvData = [];
             const ths = rows[0].querySelectorAll("th");
             const headers = [];
-            visibleIndices.forEach(i => { if (ths[i]) headers.push('"' + ths[i].innerText.replace(/[▲▼]/g, '').trim().replace(/"/g, '""') + '"'); });
+            visibleIndices.forEach(i => { if (ths[i + 1]) headers.push('"' + ths[i + 1].innerText.replace(/[▲▼]/g, '').trim().replace(/"/g, '""') + '"'); });
             csvData.push(headers.join(','));
 
             for (let i = 1; i < rows.length; i++) {
                 if (rows[i].style.display === 'none') continue;
                 const tds = rows[i].querySelectorAll("td");
                 const rowData = [];
-                visibleIndices.forEach(idx => { if (tds[idx]) rowData.push('"' + tds[idx].innerText.replace(/\n/g, ' ').trim().replace(/"/g, '""') + '"'); });
+                visibleIndices.forEach(idx => { if (tds[idx + 1]) rowData.push('"' + tds[idx + 1].innerText.replace(/\n/g, ' ').trim().replace(/"/g, '""') + '"'); });
                 csvData.push(rowData.join(','));
             }
 
@@ -878,9 +1055,9 @@
             <div class="drawer-section">
                 <div class="drawer-section-title">Afficher/Masquer</div>
                 {% for col in columns %}
-                <div class="column-item {{ 'active' if loop.index0 not in [1, 3] else '' }}"
+                <div class="column-item {{ 'active' if loop.index0 not in [1,3] else '' }}"
                     onclick="toggleColumn({{ loop.index0 }})">
-                    <input type="checkbox" {{ 'checked' if loop.index0 not in [1, 3] else '' }}>
+                    <input type="checkbox" {{ 'checked' if loop.index0 not in [1,3] else '' }}>
                     <div class="column-checkbox"></div>
                     <span class="column-label">{{ col.replace('_', ' ').title() }}</span>
                 </div>
@@ -951,6 +1128,10 @@
                 <table id="machinesTable">
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()"
+                                    style="cursor: pointer; width: 16px; height: 16px;">
+                            </th>
                             {% for col in columns %}
                             <th onclick="sortTable({{ loop.index0 }})">{{ col.replace('_', ' ').title() }}<span
                                     class="sort-indicator"></span></th>
@@ -965,6 +1146,10 @@
                         {% set bp = batt.get('percent', 0) if batt is mapping else 0 %}
                         <tr
                             class="{{ 'disk-low' if disk_gb < 30 else '' }} {{ 'battery-low' if bp is number and bp < 30 else '' }}">
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="select-checkbox" value="{{ entry.get('ip') }}"
+                                    data-hostname="{{ entry.get('hostname', 'Unknown') }}" onchange="updateActionBar()">
+                            </td>
                             {% for col in columns %}
                             {% set val = entry.get(col, '') %}
                             {% if col == 'disk_free' %}
@@ -987,12 +1172,14 @@
                             {% elif col == 'battery_details' %}
                             <td>{% set bs = entry.get('battery_status', {}) %}{% if bs is mapping and
                                 bs.get('time_left') %}<span style="color:var(--text-muted);font-size:0.8rem;">⏱️{{
-                                    bs.get('time_left') }}</span> {% endif %}{% if val is mapping %}{% set mc =
+                                    bs.get('time_left') }}</span><br>{% endif %}{% if val is mapping %}{% set mc =
                                 val.get('max_capacity') %}{% if mc %}<span
                                     class="badge {{ 'badge-danger' if mc < 80 else 'badge-warning' if mc < 90 else 'badge-success' }}">🔋{{
-                                    mc }}%</span>{% endif %}{% if val.get('cycle_count') %}<span
-                                    style="color:var(--text-muted);font-size:0.75rem;margin-left:4px;">{{
-                                    val.get('cycle_count') }}c</span>{% endif %}{% endif %}</td>
+                                    mc }}%</span><br>{% endif %}{% if val.get('cycle_count') %}<span
+                                    style="color:var(--text-muted);font-size:0.75rem;">Cycle Count: {{
+                                    val.get('cycle_count') }}</span><br>{% endif %}{% if val.get('condition') %}<span
+                                    style="color:var(--text-muted);font-size:0.75rem;">Condition: {{
+                                    val.get('condition') }}</span>{% endif %}{% endif %}</td>
                             {% elif col == 'current_user' %}
                             <td><span class="user-avatar">{{ val[:1].upper() if val else '?' }}</span>{{ val }}</td>
                             {% elif col == 'uptime' %}
@@ -1020,6 +1207,171 @@
             </div>
         </div>
     </main>
+
+    <!-- Action Bar -->
+    <div class="action-bar" id="actionBar">
+        <span class="selected-count" id="selectedCount">0 selected</span>
+        <button class="action-btn btn-chrome" onclick="performAction('/actions/chrome-cleanup')">
+            🧹 Clean Chrome
+        </button>
+        <button class="action-btn btn-restart" onclick="performAction('/actions/restart', true)">
+            🔄 Restart
+        </button>
+        <button class="action-btn btn-shutdown" onclick="performAction('/actions/shutdown', true)">
+            🛑 Shutdown
+        </button>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">Execution Progress</span>
+                <div class="drawer-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Status items will be injected here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="modalCloseBtn" onclick="closeModal()" disabled>Close</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Selection & Action Bar Logic
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.select-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+            updateActionBar();
+        }
+
+        function updateActionBar() {
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            const actionBar = document.getElementById('actionBar');
+            const countSpan = document.getElementById('selectedCount');
+
+            if (checkboxes.length > 0) {
+                actionBar.classList.add('visible');
+                countSpan.textContent = `${checkboxes.length} sélectionnés`;
+            } else {
+                actionBar.classList.remove('visible');
+            }
+
+            // Update Select All checkbox state
+            const allCheckboxes = document.querySelectorAll('.select-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            if (checkboxes.length === allCheckboxes.length && allCheckboxes.length > 0) {
+                selectAll.checked = true;
+                selectAll.indeterminate = false;
+            } else if (checkboxes.length > 0) {
+                selectAll.checked = false;
+                selectAll.indeterminate = true;
+            } else {
+                selectAll.checked = false;
+                selectAll.indeterminate = false;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('visible');
+            // Refresh table might be good if data changed, but here it's mostly system actions
+        }
+
+        function updateStatusItem(ip, status, message = '') {
+            const item = document.getElementById(`status-${ip.replace(/\./g, '-')}`);
+            if (!item) return;
+
+            const indicator = item.querySelector('.status-indicator');
+            indicator.className = `status-indicator status-${status}`;
+            indicator.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+            if (message) {
+                const msgSpan = item.querySelector('.status-message') || document.createElement('span');
+                msgSpan.className = 'status-message';
+                msgSpan.style.fontSize = '0.75rem';
+                msgSpan.style.color = 'var(--text-muted)';
+                msgSpan.textContent = ` - ${message}`;
+                if (!item.querySelector('.status-message')) {
+                    item.querySelector('.machine-info').appendChild(msgSpan);
+                }
+            }
+        }
+
+        async function performAction(url, confirmAction = false) {
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            const selectedMachines = Array.from(checkboxes).map(cb => {
+                return { ip: cb.value, hostname: cb.dataset.hostname || 'Unknown' };
+            });
+
+            if (selectedMachines.length === 0) return;
+
+            let actionName = "Action";
+            if (url.includes('chrome-cleanup')) actionName = "Chrome Cleanup";
+            if (url.includes('restart')) actionName = "Restart";
+            if (url.includes('shutdown')) actionName = "Shutdown";
+
+            if (confirmAction || url.includes('chrome-cleanup')) {
+                const msg = url.includes('chrome-cleanup')
+                    ? `This will close Chrome and clear caches/cookies on ${selectedMachines.length} machines. Continue?`
+                    : `Are you sure you want to ${actionName.toLowerCase()} ${selectedMachines.length} machines?`;
+                if (!confirm(msg)) return;
+            }
+
+            // Setup Modal
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = '';
+            document.getElementById('modalTitle').textContent = `${actionName} in progress...`;
+            document.getElementById('modalOverlay').classList.add('visible');
+            document.getElementById('modalCloseBtn').disabled = true;
+
+            selectedMachines.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'status-item';
+                div.id = `status-${m.ip.replace(/\./g, '-')}`;
+                div.innerHTML = `
+                    <div class="machine-info">
+                        <strong>${m.hostname}</strong> <span style="color:var(--text-muted)">(${m.ip})</span>
+                    </div>
+                    <span class="status-indicator status-pending">Pending</span>
+                `;
+                modalBody.appendChild(div);
+            });
+
+            // Process machines sequentially for better feedback
+            for (const machine of selectedMachines) {
+                updateStatusItem(machine.ip, 'running');
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ips: [machine.ip] })
+                    });
+
+                    const result = await response.json();
+                    const machineResult = result[machine.ip];
+
+                    if (machineResult && machineResult.success) {
+                        updateStatusItem(machine.ip, 'success');
+                    } else {
+                        updateStatusItem(machine.ip, 'error', machineResult ? machineResult.error : 'Unknown error');
+                    }
+                } catch (error) {
+                    updateStatusItem(machine.ip, 'error', 'Network error');
+                }
+            }
+
+            document.getElementById('modalTitle').textContent = `${actionName} Completed`;
+            document.getElementById('modalCloseBtn').disabled = false;
+
+            // Clear selection
+            document.getElementById('selectAll').checked = false;
+            toggleSelectAll();
+        }
+    </script>
 </body>
 
 </html>
