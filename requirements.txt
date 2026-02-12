@@ -4,3 +4,4 @@ jinja2
 python-dotenv
 tqdm
 paramiko
+python-multipart
