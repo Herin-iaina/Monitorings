@@ -569,7 +569,7 @@
             color: var(--accent-red);
         }
 
-        /* Deploy/Action Tracker Widget (non-blocking) */
+        /* Action Tracker Widget (non-blocking) */
         .deploy-tracker {
             position: fixed;
             bottom: 80px;
@@ -1558,10 +1558,10 @@
                 body.appendChild(div);
             });
 
-            // Process machines sequentially
+            // Process machines concurrently
             let done = 0;
             let errors = 0;
-            for (const machine of selectedMachines) {
+            const actionPromises = selectedMachines.map(async (machine) => {
                 updateActionItem(machine.ip, 'running');
 
                 try {
@@ -1586,7 +1586,9 @@
                 }
                 done++;
                 updateActionProgress(done, selectedMachines.length);
-            }
+            });
+
+            await Promise.all(actionPromises);
 
             // Completed
             document.getElementById('actionTrackerTitle').textContent = `${actionName} — Terminé`;
@@ -1677,10 +1679,10 @@
                 body.appendChild(div);
             });
 
-            // Deploy machine by machine
+            // Deploy machines concurrently
             let done = 0;
             let errors = 0;
-            for (const machine of selectedMachines) {
+            const deployPromises = selectedMachines.map(async (machine) => {
                 updateActionItem(machine.ip, 'running');
                 try {
                     const formData = new FormData();
@@ -1701,7 +1703,9 @@
                 }
                 done++;
                 updateActionProgress(done, selectedMachines.length);
-            }
+            });
+
+            await Promise.all(deployPromises);
 
             // Completed
             document.getElementById('actionTrackerTitle').textContent = `${file.name} — Terminé`;
