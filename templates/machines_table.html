@@ -263,14 +263,16 @@
             display: inline-block;
             width: 14px;
             height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         select {
@@ -488,10 +490,12 @@
             font-weight: 600;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.6rem;
             transition: all 0.2s;
             color: white;
             font-size: 0.9rem;
+            min-width: 140px;
         }
 
         .btn-chrome {
@@ -505,6 +509,10 @@
 
         .btn-shutdown {
             background: #EA4335;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
         }
 
         .btn-deploy {
@@ -534,69 +542,6 @@
             font-size: 0.95rem;
         }
 
-        /* Results Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            backdrop-filter: blur(8px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.visible {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            width: 95%;
-            max-width: 600px;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-
-        .modal-body {
-            overflow-y: auto;
-            flex-grow: 1;
-            margin-bottom: 1.5rem;
-        }
-
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-
-        .status-item:last-child {
-            border-bottom: none;
-        }
-
         .status-indicator {
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
@@ -624,13 +569,7 @@
             color: var(--accent-red);
         }
 
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-
-        /* Deploy Tracker Widget (non-blocking) */
+        /* Deploy/Action Tracker Widget (non-blocking) */
         .deploy-tracker {
             position: fixed;
             bottom: 80px;
@@ -653,8 +592,15 @@
         }
 
         @keyframes trackerSlideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .deploy-tracker.minimized .deploy-tracker-body,
@@ -667,7 +613,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px 14px;
-            background: linear-gradient(135deg, #34A853, #2d9348);
+            background: linear-gradient(135deg, #4b5563, #374151);
             color: white;
             cursor: pointer;
             user-select: none;
@@ -703,7 +649,7 @@
             width: 22px;
             height: 22px;
             border: none;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border-radius: 4px;
             cursor: pointer;
@@ -714,7 +660,7 @@
         }
 
         .deploy-tracker-btn:hover {
-            background: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.35);
         }
 
         .deploy-progress-bar {
@@ -723,12 +669,12 @@
 
         .deploy-progress-track {
             height: 3px;
-            background: rgba(0,0,0,0.15);
+            background: rgba(0, 0, 0, 0.15);
         }
 
         .deploy-progress-fill {
             height: 100%;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.5);
             transition: width 0.4s ease;
         }
 
@@ -1062,7 +1008,7 @@
         let visibleColumns = [];
         let sortCol = 0;
         let sortDir = 1;
-        const defaultHiddenColumns = [1,3, 5]; // MAC, Model Info
+        const defaultHiddenColumns = [1, 3, 5]; // MAC, Model Info
 
         function initOptions() {
             const items = document.querySelectorAll('.column-item');
@@ -1450,10 +1396,14 @@
         <button class="action-btn btn-shutdown" onclick="performAction('/actions/shutdown', true)">
             🛑 Shutdown
         </button>
+        <button class="action-btn btn-warning" onclick="performAction('/actions/warn-cleanup', true)">
+            Message
+        </button>
         <button class="action-btn btn-deploy" onclick="showDeployPopover()">
             📦 Deploy
         </button>
-        <input type="file" id="deployFileInput" accept=".pkg,.dmg,.zip,.sh,.mobileconfig" style="display:none" onchange="deployFile(this)">
+        <input type="file" id="deployFileInput" accept=".pkg,.dmg,.zip,.sh,.mobileconfig" style="display:none"
+            onchange="deployFile(this)">
     </div>
 
     <!-- Deploy Info Popover -->
@@ -1469,40 +1419,26 @@
         </button>
     </div>
 
-    <!-- Results Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title" id="modalTitle">Execution Progress</span>
-                <div class="drawer-close" onclick="closeModal()">✕</div>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Status items will be injected here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="modalCloseBtn" onclick="closeModal()" disabled>Close</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Deploy Tracker Widget (non-blocking) -->
-    <div class="deploy-tracker" id="deployTracker">
-        <div class="deploy-tracker-header" id="deployTrackerHeader" onclick="toggleDeployMinimize()">
+    <!-- Action Tracker Widget (non-blocking) -->
+    <div class="deploy-tracker" id="actionTracker">
+        <div class="deploy-tracker-header" id="actionTrackerHeader" onclick="toggleActionMinimize()">
             <span class="deploy-tracker-title">
-                <span id="deployTrackerIcon">📦</span>
-                <span id="deployTrackerTitle">Deploy en cours...</span>
+                <span id="actionTrackerIcon">⚙️</span>
+                <span id="actionTrackerTitle">Action en cours...</span>
             </span>
             <div class="deploy-tracker-actions" onclick="event.stopPropagation()">
-                <button class="deploy-tracker-btn" onclick="toggleDeployMinimize()" title="Reduire/Agrandir">—</button>
-                <button class="deploy-tracker-btn" id="deployCloseBtn" onclick="closeDeployTracker()" title="Fermer" style="display:none">✕</button>
+                <button class="deploy-tracker-btn" onclick="toggleActionMinimize()" title="Reduire/Agrandir">—</button>
+                <button class="deploy-tracker-btn" id="actionCloseBtn" onclick="closeActionTracker()" title="Fermer"
+                    style="display:none">✕</button>
             </div>
         </div>
         <div class="deploy-progress-bar">
             <div class="deploy-progress-track">
-                <div class="deploy-progress-fill" id="deployProgressFill" style="width:0%"></div>
+                <div class="deploy-progress-fill" id="actionProgressFill" style="width:0%"></div>
             </div>
         </div>
-        <div class="deploy-tracker-body" id="deployTrackerBody"></div>
+        <div class="deploy-tracker-body" id="actionTrackerBody"></div>
     </div>
 
     <script>
@@ -1543,29 +1479,30 @@
             }
         }
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('visible');
-            // Refresh table might be good if data changed, but here it's mostly system actions
+        // Unified Action Tracker Logic
+        function toggleActionMinimize() {
+            document.getElementById('actionTracker').classList.toggle('minimized');
         }
 
-        function updateStatusItem(ip, status, message = '') {
-            const item = document.getElementById(`status-${ip.replace(/\./g, '-')}`);
-            if (!item) return;
+        function closeActionTracker() {
+            const tracker = document.getElementById('actionTracker');
+            tracker.classList.remove('visible', 'minimized');
+        }
 
+        function updateActionItem(ip, status, message) {
+            const item = document.getElementById(`action-${ip.replace(/\./g, '-')}`);
+            if (!item) return;
             const indicator = item.querySelector('.status-indicator');
             indicator.className = `status-indicator status-${status}`;
-            indicator.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            const labels = { pending: 'En attente', running: 'En cours...', success: 'OK', error: 'Erreur' };
+            indicator.textContent = labels[status] || status;
+            const msgEl = item.querySelector('.deploy-item-msg');
+            if (msgEl) msgEl.textContent = message || '';
+        }
 
-            if (message) {
-                const msgSpan = item.querySelector('.status-message') || document.createElement('span');
-                msgSpan.className = 'status-message';
-                msgSpan.style.fontSize = '0.75rem';
-                msgSpan.style.color = 'var(--text-muted)';
-                msgSpan.textContent = ` - ${message}`;
-                if (!item.querySelector('.status-message')) {
-                    item.querySelector('.machine-info').appendChild(msgSpan);
-                }
-            }
+        function updateActionProgress(done, total) {
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            document.getElementById('actionProgressFill').style.width = pct + '%';
         }
 
         async function performAction(url, confirmAction = false) {
@@ -1577,40 +1514,55 @@
             if (selectedMachines.length === 0) return;
 
             let actionName = "Action";
-            if (url.includes('chrome-cleanup')) actionName = "Chrome Cleanup";
-            if (url.includes('restart')) actionName = "Restart";
-            if (url.includes('shutdown')) actionName = "Shutdown";
+            let actionIcon = "⚙️";
+            if (url.includes('chrome-cleanup')) { actionName = "Chrome Cleanup"; actionIcon = "🧹"; }
+            if (url.includes('restart')) { actionName = "Restart"; actionIcon = "🔄"; }
+            if (url.includes('shutdown')) { actionName = "Shutdown"; actionIcon = "🛑"; }
+            if (url.includes('warn-cleanup')) { actionName = "Message"; actionIcon = "⚠️"; }
 
-            if (confirmAction || url.includes('chrome-cleanup')) {
-                const msg = url.includes('chrome-cleanup')
-                    ? `This will close Chrome and clear caches/cookies on ${selectedMachines.length} machines. Continue?`
-                    : `Are you sure you want to ${actionName.toLowerCase()} ${selectedMachines.length} machines?`;
+            if (confirmAction) {
+                let msg = `Voulez-vous vraiment ${actionName.toLowerCase()} sur ${selectedMachines.length} machines ?`;
+                if (url.includes('chrome-cleanup')) msg = `Cela fermera Chrome et effacera les caches sur ${selectedMachines.length} machines. Continuer ?`;
+                if (url.includes('restart')) msg = `Redémarrer ${selectedMachines.length} machines ?`;
+                if (url.includes('shutdown')) msg = `Éteindre ${selectedMachines.length} machines ?`;
+                if (url.includes('warn-cleanup')) msg = `Envoyer le message d'entretien à ${selectedMachines.length} machines ?`;
+
                 if (!confirm(msg)) return;
             }
 
-            // Setup Modal
-            const modalBody = document.getElementById('modalBody');
-            modalBody.innerHTML = '';
-            document.getElementById('modalTitle').textContent = `${actionName} in progress...`;
-            document.getElementById('modalOverlay').classList.add('visible');
-            document.getElementById('modalCloseBtn').disabled = true;
+            // Setup Tracker Widget
+            const tracker = document.getElementById('actionTracker');
+            const body = document.getElementById('actionTrackerBody');
+            const header = document.getElementById('actionTrackerHeader');
+            body.innerHTML = '';
+            header.className = 'deploy-tracker-header';
+            document.getElementById('actionTrackerIcon').textContent = actionIcon;
+            document.getElementById('actionTrackerTitle').textContent = actionName;
+            document.getElementById('actionProgressFill').style.width = '0%';
+            document.getElementById('actionCloseBtn').style.display = 'none';
+            tracker.classList.remove('minimized');
+            tracker.classList.add('visible');
 
             selectedMachines.forEach(m => {
                 const div = document.createElement('div');
-                div.className = 'status-item';
-                div.id = `status-${m.ip.replace(/\./g, '-')}`;
+                div.className = 'deploy-item';
+                div.id = `action-${m.ip.replace(/\./g, '-')}`;
                 div.innerHTML = `
-                    <div class="machine-info">
-                        <strong>${m.hostname}</strong> <span style="color:var(--text-muted)">(${m.ip})</span>
+                    <div class="deploy-item-info">
+                        <div class="deploy-item-host">${m.hostname}</div>
+                        <div class="deploy-item-ip">${m.ip}</div>
+                        <div class="deploy-item-msg"></div>
                     </div>
-                    <span class="status-indicator status-pending">Pending</span>
+                    <span class="status-indicator status-pending">En attente</span>
                 `;
-                modalBody.appendChild(div);
+                body.appendChild(div);
             });
 
-            // Process machines sequentially for better feedback
+            // Process machines sequentially
+            let done = 0;
+            let errors = 0;
             for (const machine of selectedMachines) {
-                updateStatusItem(machine.ip, 'running');
+                updateActionItem(machine.ip, 'running');
 
                 try {
                     const response = await fetch(url, {
@@ -1623,24 +1575,31 @@
                     const machineResult = result[machine.ip];
 
                     if (machineResult && machineResult.success) {
-                        updateStatusItem(machine.ip, 'success');
+                        updateActionItem(machine.ip, 'success');
                     } else {
-                        updateStatusItem(machine.ip, 'error', machineResult ? machineResult.error : 'Unknown error');
+                        errors++;
+                        updateActionItem(machine.ip, 'error', machineResult ? machineResult.error : 'Erreur inconnue');
                     }
                 } catch (error) {
-                    updateStatusItem(machine.ip, 'error', 'Network error');
+                    errors++;
+                    updateActionItem(machine.ip, 'error', 'Erreur réseau');
                 }
+                done++;
+                updateActionProgress(done, selectedMachines.length);
             }
 
-            document.getElementById('modalTitle').textContent = `${actionName} Completed`;
-            document.getElementById('modalCloseBtn').disabled = false;
+            // Completed
+            document.getElementById('actionTrackerTitle').textContent = `${actionName} — Terminé`;
+            document.getElementById('actionTrackerIcon').textContent = errors > 0 ? '⚠️' : '✅';
+            header.classList.add(errors > 0 ? 'has-errors' : 'done');
+            document.getElementById('actionCloseBtn').style.display = '';
 
             // Clear selection
             document.getElementById('selectAll').checked = false;
             toggleSelectAll();
         }
 
-        // Deploy Popover
+        // Deploy Popover logic
         function showDeployPopover() {
             const checkboxes = document.querySelectorAll('.select-checkbox:checked');
             if (checkboxes.length === 0) {
@@ -1659,7 +1618,7 @@
             document.getElementById('deployFileInput').click();
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const popover = document.getElementById('deployPopover');
             if (!popover || !popover.classList.contains('visible')) return;
             const deployBtn = document.querySelector('.btn-deploy');
@@ -1668,33 +1627,7 @@
             }
         });
 
-        // Deploy Tracker Widget
-        function toggleDeployMinimize() {
-            document.getElementById('deployTracker').classList.toggle('minimized');
-        }
-
-        function closeDeployTracker() {
-            const tracker = document.getElementById('deployTracker');
-            tracker.classList.remove('visible', 'minimized');
-        }
-
-        function updateDeployItem(ip, status, message) {
-            const item = document.getElementById(`deploy-${ip.replace(/\./g, '-')}`);
-            if (!item) return;
-            const indicator = item.querySelector('.status-indicator');
-            indicator.className = `status-indicator status-${status}`;
-            const labels = { pending: 'En attente', running: 'En cours...', success: 'OK', error: 'Erreur' };
-            indicator.textContent = labels[status] || status;
-            const msgEl = item.querySelector('.deploy-item-msg');
-            if (msgEl) msgEl.textContent = message || '';
-        }
-
-        function updateDeployProgress(done, total) {
-            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-            document.getElementById('deployProgressFill').style.width = pct + '%';
-        }
-
-        // Deploy File (non-blocking tracker)
+        // Deploy File (uses unified tracker)
         async function deployFile(input) {
             const file = input.files[0];
             if (!file) return;
@@ -1717,22 +1650,22 @@
             }
 
             // Setup Tracker Widget
-            const tracker = document.getElementById('deployTracker');
-            const body = document.getElementById('deployTrackerBody');
-            const header = document.getElementById('deployTrackerHeader');
+            const tracker = document.getElementById('actionTracker');
+            const body = document.getElementById('actionTrackerBody');
+            const header = document.getElementById('actionTrackerHeader');
             body.innerHTML = '';
             header.className = 'deploy-tracker-header';
-            document.getElementById('deployTrackerIcon').textContent = '📦';
-            document.getElementById('deployTrackerTitle').textContent = file.name;
-            document.getElementById('deployProgressFill').style.width = '0%';
-            document.getElementById('deployCloseBtn').style.display = 'none';
+            document.getElementById('actionTrackerIcon').textContent = '📦';
+            document.getElementById('actionTrackerTitle').textContent = file.name;
+            document.getElementById('actionProgressFill').style.width = '0%';
+            document.getElementById('actionCloseBtn').style.display = 'none';
             tracker.classList.remove('minimized');
             tracker.classList.add('visible');
 
             selectedMachines.forEach(m => {
                 const div = document.createElement('div');
                 div.className = 'deploy-item';
-                div.id = `deploy-${m.ip.replace(/\./g, '-')}`;
+                div.id = `action-${m.ip.replace(/\./g, '-')}`;
                 div.innerHTML = `
                     <div class="deploy-item-info">
                         <div class="deploy-item-host">${m.hostname}</div>
@@ -1748,7 +1681,7 @@
             let done = 0;
             let errors = 0;
             for (const machine of selectedMachines) {
-                updateDeployItem(machine.ip, 'running');
+                updateActionItem(machine.ip, 'running');
                 try {
                     const formData = new FormData();
                     formData.append('file', file);
@@ -1757,24 +1690,24 @@
                     const result = await response.json();
                     const machineResult = result[machine.ip];
                     if (machineResult && machineResult.success) {
-                        updateDeployItem(machine.ip, 'success', machineResult.output || 'Installe');
+                        updateActionItem(machine.ip, 'success', machineResult.output || 'Installé');
                     } else {
                         errors++;
-                        updateDeployItem(machine.ip, 'error', machineResult ? machineResult.error : 'Erreur inconnue');
+                        updateActionItem(machine.ip, 'error', machineResult ? machineResult.error : 'Erreur inconnue');
                     }
                 } catch (error) {
                     errors++;
-                    updateDeployItem(machine.ip, 'error', 'Erreur reseau');
+                    updateActionItem(machine.ip, 'error', 'Erreur réseau');
                 }
                 done++;
-                updateDeployProgress(done, selectedMachines.length);
+                updateActionProgress(done, selectedMachines.length);
             }
 
             // Completed
-            document.getElementById('deployTrackerTitle').textContent = `${file.name} — Termine`;
-            document.getElementById('deployTrackerIcon').textContent = errors > 0 ? '⚠️' : '✅';
+            document.getElementById('actionTrackerTitle').textContent = `${file.name} — Terminé`;
+            document.getElementById('actionTrackerIcon').textContent = errors > 0 ? '⚠️' : '✅';
             header.classList.add(errors > 0 ? 'has-errors' : 'done');
-            document.getElementById('deployCloseBtn').style.display = '';
+            document.getElementById('actionCloseBtn').style.display = '';
 
             // Reset file input & selection
             input.value = '';
@@ -1860,7 +1793,7 @@
                     setScanningState(true);
                     pollScanStatus();
                 }
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 </body>

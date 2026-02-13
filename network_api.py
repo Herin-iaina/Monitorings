@@ -258,6 +258,34 @@ def shutdown_machine(request: ActionRequest):
         results[ip] = execute_ssh_command(ip, command)
     return results
 
+@app.post("/actions/warn-cleanup")
+def warn_cleanup(request: ActionRequest):
+    """Envoie une notification AppleScript pour avertir l'utilisateur de nettoyer son Mac."""
+    script = """#!/bin/bash
+GUI_USER=$(stat -f%Su /dev/console)
+if [ -z "$GUI_USER" ] || [ "$GUI_USER" = "root" ]; then
+    echo "ERREUR: Aucun utilisateur GUI detecte"
+    exit 1
+fi
+
+USER_ID=$(id -u "$GUI_USER")
+echo "Envoi de la notification 'Opération Clean Desk' a $GUI_USER (UID: $USER_ID)..."
+
+# Utilisation de launchctl asuser pour s'assurer que l'alerte s'affiche dans la session de l'utilisateur
+launchctl asuser "$USER_ID" sudo -u "$GUI_USER" osascript -e 'display alert "Opération Clean Desk !" message "Mac, chargeur, adaptateurs. ✅
+Écran Mac : Chiffon SEC uniquement ! 🚨
+
+Un bureau propre, c'"'"'est un esprit frais pour finir la semaine ! 🚀" as critical buttons {"Fermer"} default button "Fermer"'
+"""
+    import base64
+    encoded = base64.b64encode(script.encode()).decode()
+    # Ajout du sudo -S pour l'exécution du script
+    command = f"echo {encoded} | base64 -D > /tmp/_warn_cleanup.sh && sudo -S bash /tmp/_warn_cleanup.sh; rm -f /tmp/_warn_cleanup.sh"
+    results = {}
+    for ip in request.ips:
+        results[ip] = execute_ssh_command(ip, command)
+    return results
+
 def _cleanup_json(max_files=5):
     """Supprime les fichiers JSON les plus anciens si leur nombre dépasse la limite."""
     files = glob.glob("smartelia_machines_*.json")
