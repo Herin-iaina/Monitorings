@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 import re
 import threading
+import concurrent.futures
 import network_scanner
 
 app = FastAPI()
@@ -258,9 +259,8 @@ def shutdown_machine(request: ActionRequest):
         results[ip] = execute_ssh_command(ip, command)
     return results
 
-@app.post("/actions/warn-cleanup")
-def warn_cleanup(request: ActionRequest):
-    """Envoie une notification AppleScript pour avertir l'utilisateur de nettoyer son Mac."""
+def _send_notification(ips: List[str]):
+    """Helper interne pour envoyer l'alerte AppleScript à une liste d'IPs."""
     script = """#!/bin/bash
 GUI_USER=$(stat -f%Su /dev/console)
 if [ -z "$GUI_USER" ] || [ "$GUI_USER" = "root" ]; then
@@ -272,19 +272,82 @@ USER_ID=$(id -u "$GUI_USER")
 echo "Envoi de la notification 'Opération Clean Desk' a $GUI_USER (UID: $USER_ID)..."
 
 # Utilisation de launchctl asuser pour s'assurer que l'alerte s'affiche dans la session de l'utilisateur
-launchctl asuser "$USER_ID" sudo -u "$GUI_USER" osascript -e 'display alert "Opération Clean Desk !" message "Mac, chargeur, adaptateurs. ✅
+launchctl asuser "$USER_ID" sudo -u "$GUI_USER" osascript <<EOF
+display alert "Opération Clean Desk !" message "Mac, chargeur, adaptateurs. ✅
 Écran Mac : Chiffon SEC uniquement ! 🚨
 
-Un bureau propre, c'"'"'est un esprit frais pour finir la semaine ! 🚀" as critical buttons {"Fermer"} default button "Fermer"'
+Un bureau propre, c'est un esprit frais pour finir la semaine ! 🚀" as critical buttons {"Fermer"} default button "Fermer"
+EOF
 """
     import base64
     encoded = base64.b64encode(script.encode()).decode()
-    # Ajout du sudo -S pour l'exécution du script
     command = f"echo {encoded} | base64 -D > /tmp/_warn_cleanup.sh && sudo -S bash /tmp/_warn_cleanup.sh; rm -f /tmp/_warn_cleanup.sh"
+    print(f"[*] Envoi de notification à {len(ips)} machines en parallèle...")
     results = {}
-    for ip in request.ips:
-        results[ip] = execute_ssh_command(ip, command)
+    
+    def _single_notify(ip):
+        return ip, execute_ssh_command(ip, command)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
+        future_to_ip = {executor.submit(_single_notify, ip): ip for ip in ips}
+        for future in concurrent.futures.as_completed(future_to_ip):
+            ip, res = future.result()
+            results[ip] = res
+            
     return results
+
+@app.post("/actions/warn-cleanup")
+def warn_cleanup(request: ActionRequest):
+    """Envoie une notification AppleScript pour avertir l'utilisateur de nettoyer son Mac."""
+    return _send_notification(request.ips)
+
+def run_weekly_scheduler():
+    """Thread de fond pour envoyer les notifications automatiquement selon le planning .env"""
+    import time
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    target_day = os.getenv("CLEANUP_SCHEDULE_DAY", "friday").lower()
+    target_time = os.getenv("CLEANUP_SCHEDULE_TIME", "16:00")
+    
+    last_run_date = None
+    
+    print(f"[*] Planificateur activé : {target_day} à {target_time}")
+    
+    while True:
+        now = datetime.now()
+        current_day = now.strftime("%A").lower()
+        current_time = now.strftime("%H:%M")
+        current_date = now.strftime("%Y-%m-%d")
+        
+        if current_day == target_day and current_time == target_time:
+            if last_run_date != current_date:
+                print(f"[!] Lancement de la notification hebdomadaire automatique ({current_date})...")
+                try:
+                    # Récupérer toutes les IPs connues
+                    data = load_and_merge_json_files()
+                    ips = list(set([entry.get('ip') for entry in data if entry.get('ip')]))
+                    if ips:
+                        results = _send_notification(ips)
+                        last_run_date = current_date
+                        success_count = sum(1 for r in results.values() if r.get('success'))
+                        error_count = len(ips) - success_count
+                        print(f"[*] Notification terminée : {success_count} OK, {error_count} Échecs.")
+                        
+                        # Log des erreurs s'il y en a
+                        for ip, res in results.items():
+                            if not res.get('success') or res.get('error'):
+                                print(f"  [!] {ip}: {res}")
+                    else:
+                        print("[?] Aucune machine trouvée pour la notification automatique.")
+                except Exception as e:
+                    print(f"[!] Erreur programmation scheduler : {e}")
+        
+        # Attendre 30 secondes avant la prochaine vérification
+        time.sleep(30)
+
+# Lancement du scheduler dans un thread séparé
+threading.Thread(target=run_weekly_scheduler, daemon=True).start()
 
 def _cleanup_json(max_files=5):
     """Supprime les fichiers JSON les plus anciens si leur nombre dépasse la limite."""

@@ -63,6 +63,25 @@ ALERT_RECIPIENTS=destinataire1@example.com,destinataire2@example.com
 | Batterie Pleine | = 100% + branché | Alerté dans section dédiée |
 | Batterie Faible | < 30% | Alerté dans section dédiée |
 
+### Notifications de Nettoyage Automatiques (Clean Desk)
+
+Le système peut envoyer automatiquement un message d'alerte "Opération Clean Desk" à tous les Mac détectés, une fois par semaine.
+
+**Configuration :**
+Ajoutez les variables suivantes dans votre fichier `.env` :
+
+```bash
+# Jour de la semaine (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+CLEANUP_SCHEDULE_DAY=friday
+# Heure au format HH:MM (heure locale du serveur)
+CLEANUP_SCHEDULE_TIME=16:00
+```
+
+**Comportement :**
+- Le serveur vérifie le planning toutes les 30 secondes en arrière-plan.
+- Au moment configuré, un message AppleScript critique s'affiche sur la session active de chaque Mac trouvé dans le dernier scan.
+- Le message rappelle aux utilisateurs de nettoyer leur bureau, leur écran (chiffon sec uniquement), et de ranger leurs accessoires.
+
 ### Test du Système de Notification
 
 Pour tester l'envoi d'email avec des données fictives :
@@ -225,10 +244,3 @@ Fichiers ajoutés pour l'exécution hôte
 - `packaging/systemd/networkscanner.service` et `packaging/systemd/networkscanner.timer` : exemples pour Linux/systemd.
 - `packaging/launchd/com.smartelia.networkscanner.plist` : exemple pour macOS/launchd.
 
-Si vous voulez que je :
-- adapte le service pour exécuter `runner.py` (API + scanner) sur l'hôte au lieu de `network_scanner.py`, ou
-- crée un petit script d'installation qui met en place automatiquement les unités systemd/launchd (avec vérification des chemins),
-je peux l'ajouter.
-
----
-Fichier généré automatiquement lors de la demande d'ajout du README.
