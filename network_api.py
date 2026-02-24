@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi import FastAPI, Form
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse, RedirectResponse
 import glob
 import json
 import os
@@ -7,10 +7,22 @@ from datetime import datetime, timedelta
 from typing import List, Dict
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+from starlette.middleware.sessions import SessionMiddleware
+from dotenv import load_dotenv
 import re
 
+load_dotenv()
+
+AUTH_PIN = os.getenv("AUTH_PIN", "1234")
+SECRET_KEY = os.getenv("SECRET_KEY", "changez-cette-cle-secrete")
+
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory="templates")
+
+
+def is_authenticated(request: Request) -> bool:
+    return request.session.get("authenticated") is True
 
 # Fonction utilitaire pour charger et fusionner les données sans doublons
 
@@ -147,6 +159,31 @@ def load_and_merge_json_files() -> List[Dict]:
 
     return list(latest_data.values())
 
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    if is_authenticated(request):
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+
+
+@app.post("/login")
+async def login_submit(request: Request, pin: str = Form(...)):
+    if pin == AUTH_PIN:
+        request.session["authenticated"] = True
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request, "error": "PIN incorrect. Réessayez."},
+        status_code=401
+    )
+
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/login", status_code=302)
+
+
 @app.get("/machines", response_class=JSONResponse)
 def get_machines():
     """Retourne la liste fusionnée des machines sans doublons."""
@@ -155,6 +192,8 @@ def get_machines():
 
 @app.get("/", response_class=HTMLResponse)
 def get_machines_html(request: Request):
+    if not is_authenticated(request):
+        return RedirectResponse(url="/login", status_code=302)
     data = load_and_merge_json_files()
     print(f"Nombre de machines à afficher : {len(data)}")
     if data:
