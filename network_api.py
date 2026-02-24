@@ -23,6 +23,36 @@ app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory="templates")
 
+
+def is_authenticated(request: Request) -> bool:
+    return request.session.get("authenticated") is True
+
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    if is_authenticated(request):
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+
+
+@app.post("/login")
+async def login_submit(request: Request, pin: str = Form(...)):
+    if pin == AUTH_PIN:
+        request.session["authenticated"] = True
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request, "error": "PIN incorrect. Réessayez."},
+        status_code=401
+    )
+
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/login", status_code=302)
+
+
 # Scan state management
 scan_state = {"status": "idle", "started_at": None, "machines_found": 0, "error": None}
 scan_lock = threading.Lock()
@@ -643,9 +673,10 @@ def list_files():
 # Configuration du serveur pour écouter sur toutes les interfaces
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run(
-        app, 
-        host="0.0.0.0",  # Écouter sur toutes les interfaces
-        port=8000,
-        reload=True  # Rechargement automatique en développement
-    ) 
+        app,
+        host="0.0.0.0",
+        port=port,
+        reload=True
+    )

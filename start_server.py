@@ -4,27 +4,24 @@ Script de démarrage du serveur FastAPI pour l'API de visualisation des machines
 """
 
 import uvicorn
+import os
+from dotenv import load_dotenv
 from network_api import app
 
+load_dotenv()
+
 if __name__ == "__main__":
-    print("🚀 Démarrage du serveur FastAPI...")
-    print("📡 Le serveur sera accessible sur toutes les interfaces réseau")
-    print("🌐 URL locale: http://localhost:8000")
-    print("🌐 URL réseau: http://0.0.0.0:8000")
-    print("📋 Endpoints disponibles:")
-    print("   - / (page d'accueil)")
-    print("   - /machines (liste des machines en JSON)")
-    print("   - /machines/html (interface web)")
-    print("   - /files (liste des fichiers disponibles)")
-    print("   - /files/{filename} (téléchargement de fichiers)")
-    print("   - /installers/os_downloader.sh (téléchargement du script)")
-    print("   - /installers/os_installer.sh (téléchargement du script)")
+    port = int(os.getenv("PORT", 8000))
+    print("Démarrage du serveur FastAPI...")
+    print("Le serveur sera accessible sur toutes les interfaces réseau")
+    print(f"URL locale: http://localhost:{port}")
+    print(f"URL réseau: http://0.0.0.0:{port}")
     print("=" * 50)
-    
+
     uvicorn.run(
         app,
-        host="0.0.0.0",  # Écouter sur toutes les interfaces réseau
-        port=8000,
-        reload=True,  # Rechargement automatique en développement
+        host="0.0.0.0",
+        port=port,
+        reload=True,
         log_level="info"
-    ) 
+    )
