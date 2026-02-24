@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse,RedirectResponse
 import glob
 import json
 import os
@@ -7,12 +7,20 @@ from datetime import datetime, timedelta
 from typing import List, Dict
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+from starlette.middleware.sessions import SessionMiddleware
+from dotenv import load_dotenv
 import re
 import threading
 import concurrent.futures
 import network_scanner
 
+load_dotenv()
+
+AUTH_PIN = os.getenv("AUTH_PIN", "1234")
+SECRET_KEY = os.getenv("SECRET_KEY", "changez-cette-cle-secrete")
+
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory="templates")
 
 # Scan state management
@@ -518,6 +526,8 @@ def get_machines():
 
 @app.get("/", response_class=HTMLResponse)
 def get_machines_html(request: Request):
+    if not is_authenticated(request):
+        return RedirectResponse(url="/login", status_code=302)
     data = load_and_merge_json_files()
     print(f"Nombre de machines à afficher : {len(data)}")
     if data:
