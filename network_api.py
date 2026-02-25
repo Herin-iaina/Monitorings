@@ -339,6 +339,46 @@ def warn_cleanup(request: ActionRequest):
     """Envoie une notification AppleScript pour avertir l'utilisateur de nettoyer son Mac."""
     return _send_notification(request.ips)
 
+
+class MessageRequest(BaseModel):
+    ips: List[str]
+    message: str
+
+
+@app.post("/actions/send-message")
+def send_custom_message(req: MessageRequest):
+    """Envoie un message personnalisé via AppleScript aux machines cibles."""
+    import base64
+    safe_msg = req.message.replace('\\', '\\\\').replace('"', '\\"')
+    applescript = f'display dialog "{safe_msg}" with title "Message IT SMARTELIA" buttons {{"Fermer"}} default button "Fermer" with icon caution'
+    applescript_b64 = base64.b64encode(applescript.encode()).decode()
+    script = f"""#!/bin/bash
+GUI_USER=$(stat -f%Su /dev/console)
+if [ -z "$GUI_USER" ] || [ "$GUI_USER" = "root" ]; then
+    echo "ERREUR: Aucun utilisateur GUI detecte"
+    exit 1
+fi
+USER_ID=$(id -u "$GUI_USER")
+echo '{applescript_b64}' | base64 -D > /tmp/_msg_script.applescript
+launchctl asuser "$USER_ID" sudo -u "$GUI_USER" osascript /tmp/_msg_script.applescript
+rm -f /tmp/_msg_script.applescript
+"""
+    encoded = base64.b64encode(script.encode()).decode()
+    command = f"echo {encoded} | base64 -D > /tmp/_custom_msg.sh && sudo -S bash /tmp/_custom_msg.sh; rm -f /tmp/_custom_msg.sh"
+
+    results = {}
+
+    def _single(ip):
+        return ip, execute_ssh_command(ip, command)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
+        future_to_ip = {executor.submit(_single, ip): ip for ip in req.ips}
+        for future in concurrent.futures.as_completed(future_to_ip):
+            ip, res = future.result()
+            results[ip] = res
+
+    return results
+
 def run_weekly_scheduler():
     """Thread de fond pour envoyer les notifications automatiquement selon le planning .env"""
     import time

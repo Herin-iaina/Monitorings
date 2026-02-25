@@ -768,6 +768,64 @@
             margin-top: 12px;
         }
 
+        /* Message Popover */
+        .message-popover {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 16px;
+            z-index: 1100;
+            width: 360px;
+            animation: trackerSlideUp 0.2s ease;
+        }
+
+        .message-popover.visible {
+            display: block;
+        }
+
+        .message-popover-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .message-popover textarea {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            padding: 10px 12px;
+            resize: vertical;
+            min-height: 90px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .message-popover textarea:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .message-popover-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-send-msg {
+            background: #8b5cf6;
+        }
+
         .select-checkbox {
             width: 18px;
             height: 18px;
@@ -1399,11 +1457,28 @@
         <button class="action-btn btn-warning" onclick="performAction('/actions/warn-cleanup', true)">
             Message
         </button>
+        <button class="action-btn btn-send-msg" onclick="showMessagePopover()">
+            ✉️ Envoyer
+        </button>
         <button class="action-btn btn-deploy" onclick="showDeployPopover()">
             📦 Deploy
         </button>
         <input type="file" id="deployFileInput" accept=".pkg,.dmg,.zip,.sh,.mobileconfig" style="display:none"
             onchange="deployFile(this)">
+    </div>
+
+    <!-- Message Perso Popover -->
+    <div class="message-popover" id="messagePopover">
+        <div class="message-popover-title">✉️ Message personnalisé</div>
+        <textarea id="messageInput" placeholder="Tapez votre message ici..."></textarea>
+        <div class="message-popover-actions">
+            <button class="action-btn btn-send-msg deploy-popover-btn" onclick="sendCustomMessage()">
+                Envoyer
+            </button>
+            <button class="action-btn btn-shutdown deploy-popover-btn" onclick="closeMessagePopover()" style="background:#475569;">
+                Annuler
+            </button>
+        </div>
     </div>
 
     <!-- Deploy Info Popover -->
@@ -1600,6 +1675,111 @@
             document.getElementById('selectAll').checked = false;
             toggleSelectAll();
         }
+
+        // Message Popover logic
+        function showMessagePopover() {
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Aucune machine selectionnee.');
+                return;
+            }
+            document.getElementById('messagePopover').classList.add('visible');
+            document.getElementById('messageInput').focus();
+        }
+
+        function closeMessagePopover() {
+            document.getElementById('messagePopover').classList.remove('visible');
+            document.getElementById('messageInput').value = '';
+        }
+
+        async function sendCustomMessage() {
+            const message = document.getElementById('messageInput').value.trim();
+            if (!message) {
+                alert('Veuillez saisir un message.');
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+            const selectedMachines = Array.from(checkboxes).map(cb => ({
+                ip: cb.value, hostname: cb.dataset.hostname || 'Unknown'
+            }));
+
+            if (selectedMachines.length === 0) return;
+            closeMessagePopover();
+
+            // Setup Tracker Widget
+            const tracker = document.getElementById('actionTracker');
+            const body = document.getElementById('actionTrackerBody');
+            const header = document.getElementById('actionTrackerHeader');
+            body.innerHTML = '';
+            header.className = 'deploy-tracker-header';
+            document.getElementById('actionTrackerIcon').textContent = '✉️';
+            document.getElementById('actionTrackerTitle').textContent = 'Envoi message';
+            document.getElementById('actionProgressFill').style.width = '0%';
+            document.getElementById('actionCloseBtn').style.display = 'none';
+            tracker.classList.remove('minimized');
+            tracker.classList.add('visible');
+
+            selectedMachines.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'deploy-item';
+                div.id = `action-${m.ip.replace(/\./g, '-')}`;
+                div.innerHTML = `
+                    <div class="deploy-item-info">
+                        <div class="deploy-item-host">${m.hostname}</div>
+                        <div class="deploy-item-ip">${m.ip}</div>
+                        <div class="deploy-item-msg"></div>
+                    </div>
+                    <span class="status-indicator status-pending">En attente</span>
+                `;
+                body.appendChild(div);
+            });
+
+            let done = 0;
+            let errors = 0;
+            const promises = selectedMachines.map(async (machine) => {
+                updateActionItem(machine.ip, 'running');
+                try {
+                    const response = await fetch('/actions/send-message', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ips: [machine.ip], message })
+                    });
+                    const result = await response.json();
+                    const res = result[machine.ip];
+                    if (res && res.success) {
+                        updateActionItem(machine.ip, 'success');
+                    } else {
+                        errors++;
+                        updateActionItem(machine.ip, 'error', res ? res.error : 'Erreur inconnue');
+                    }
+                } catch (e) {
+                    errors++;
+                    updateActionItem(machine.ip, 'error', 'Erreur réseau');
+                }
+                done++;
+                updateActionProgress(done, selectedMachines.length);
+            });
+
+            await Promise.all(promises);
+
+            document.getElementById('actionTrackerTitle').textContent = `Message — Terminé`;
+            document.getElementById('actionTrackerIcon').textContent = errors > 0 ? '⚠️' : '✅';
+            header.classList.add(errors > 0 ? 'has-errors' : 'done');
+            document.getElementById('actionCloseBtn').style.display = '';
+
+            document.getElementById('selectAll').checked = false;
+            toggleSelectAll();
+        }
+
+        document.addEventListener('click', function (e) {
+            const msgPopover = document.getElementById('messagePopover');
+            if (!msgPopover || !msgPopover.classList.contains('visible')) return;
+            const msgBtn = document.querySelector('.btn-send-msg');
+            if (!msgPopover.contains(e.target) && e.target !== msgBtn && !msgBtn.contains(e.target)) {
+                closeMessagePopover();
+            }
+        });
 
         // Deploy Popover logic
         function showDeployPopover() {

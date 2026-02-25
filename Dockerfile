@@ -28,7 +28,8 @@ RUN useradd -m appuser || true
 RUN chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 8000
+ARG PORT=8000
+EXPOSE ${PORT}
 
 # Lancer le runner qui démarre l'API et le scheduler
 CMD ["python", "runner.py"]
